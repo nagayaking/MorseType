@@ -1,11 +1,11 @@
 let ddtime=0;
 let blanktime=0;
-var interval = 200
-var id;
-var word = "";
-var words=[];
-var num = 0;
-var morseGain = 0.5;
+let interval = 200
+let id;
+let word = "";
+let words=[];
+let num = 0;
+let morseGain = 0.5;
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -120,7 +120,7 @@ const shuffleArray = (array) => {
   return cloneArray;
 }
 
-var shuffledExample = shuffleArray(examples);
+let shuffledExample = shuffleArray(examples);
 
 const reset = () => {
   wordsBase = ["", replaceWithMap(shuffledExample[num][1], conversionMap)];
