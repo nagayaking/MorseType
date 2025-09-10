@@ -154,6 +154,28 @@ main {
     pointer-events: none;
 }
 
-input .getApi {
+/* --- AIチャットページのスタイル --- */
+#aiChatToggleElement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.getApi {
+    width: 80%;
+    max-width: 500px;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #25272a;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 1em;
     text-align: left;
+}
+
+.getApi::placeholder {
+    color: #888;
 }
