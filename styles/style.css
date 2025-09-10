@@ -1,0 +1,155 @@
+html {
+	background: #323437;
+	transition: 1s ease;
+	font-family: sans-serif;
+	word-break: break-all;
+	text-align: center;
+}
+
+header {
+	width: auto;
+	height: 70px;
+	line-height: 70px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.header-left {
+	float: left;
+}
+
+.header-left h1 {
+	text-align: left;
+	margin: 0;
+	color: white;
+}
+
+.header-right {
+	text-align: right;;
+}
+
+.header-right .icon {
+	margin-left: 20px;
+	padding: 0;
+}
+
+.fa-computer-mouse {
+	font-size: 1.2em;
+}
+
+.icon-logo {
+	font-size: 1.5em;
+	color: white;
+}
+
+.header-right button {
+	background-color: transparent;
+	border: none;
+	margin: 0;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; /* 🚩これ無しだとスタイルがほぼ全く反映されないので注意 */
+  appearance: none;
+  cursor: pointer; /* カーソルを分かりやすく */
+  outline: none; /* スライダーのアウトラインは見た目がキツイので消す */
+  height: 6px; /* バーの高さ */
+  width: 10%; /* バーの幅 */
+  background: #8acdff; /* バーの背景色 */
+  border-radius: 10px; /* バーの両端の丸み */
+  border: solid 3px #dff1ff; /* バー周囲の線 */
+}
+/* WebKit向けのつまみ */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /*  🚩デフォルトのつまみのスタイルを解除 */
+  background: #53aeff; /* 背景色 */
+  width: 20px; /* 幅 */
+  height: 20px; /* 高さ */
+  border-radius: 50%; /* 円形に */
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); /* 影 */
+}
+/* Moz向けのつまみ */
+input[type="range"]::-moz-range-thumb {
+  background: #53aeff; /* 背景色 */
+  width: 20px; /* 幅 */
+  height: 20px; /* 高さ */
+  border-radius: 50%; /* 円形に */
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); /* 影 */
+  border: none; /* デフォルトの線を消す */
+}
+/* Firefoxで点線が周りに表示されてしまう問題の解消 */
+input[type="range"]::-moz-focus-outer {
+  border: 0;
+}
+/* つまみをドラッグしているときのスタイル */
+input[type="range"]:active::-webkit-slider-thumb {
+  box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
+}
+
+.morse-wrapper button{
+	width: 200px;
+	height: 50px;
+}
+
+#textJapanese {
+	font-size: 40px;
+	color: white;
+	margin: 20px 0;
+}
+
+#textHurigana{
+	font-size: 18px;
+	color: #646669;
+}
+
+#morseJapanese{
+	color : #646669;
+}
+
+.text span {
+	border-right: 2px solid #e2b714;
+}
+
+.conversion-wrapper li {
+	list-style: none;
+	padding: 2px 10px;
+	text-align: left;
+}
+
+/* 縦並び２列 */
+.list {
+  display: inline-grid;
+  column-gap: 2em;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(10, auto);
+}
+
+.color-white { color: white; }
+.color-gray { color: #646669; }
+
+/* --- ページ切り替えトランジション設定 --- */
+
+/* 2つの画面を重ねるための設定 */
+main {
+    position: relative;
+}
+
+/* 切り替え対象の要素に共通で適用するスタイル */
+.page-content {
+    /* position:absoluteで同じ位置に要素を重ねる */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    /* opacity（透明度）の変化に0.4秒かける */
+    transition: opacity 0.4s ease-out;
+}
+
+/* 非表示状態を管理するクラス */
+.is-hidden {
+    /* 透明にする */
+    opacity: 0;
+    /* 透明な状態でもクリックなどが効かないようにする */
+    pointer-events: none;
+}
