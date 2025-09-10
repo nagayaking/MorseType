@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>morse_code_chatting</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://kit.fontawesome.com/ce7308f5de.js" crossorigin="anonymous"></script>
+    <script src="scripts/screen-switch.js" defer></script>
+    <script src="scripts/morseModule.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a class="header-left">
+                <h1>MorseType</h1>
+            </a>
+            <div class="header-right">
+                <input type="range" id="volume" name="volume" min="0" max="1" step="0.05" />
+                <label for="volume"><i class="fa-solid fa-volume-high" style="color: #ffffff;"></i></label>
+                <button id="practiceToggleButton" class="icon">
+                    <span title="Practice">
+                        <i class="fa-solid fa-computer-mouse" style="color: #ffffff;"></i>
+                    </span>
+                </button>
+                <button id="aiChatToggleButton" class="icon"\>
+                    <span title="AI-chat">
+                        <p class="icon-logo">AI</p>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="practiceToggleElement" class="page-content">
+            <div class="morse-wrapper">
+                <div class="container">
+                    <p id ="textJapanese"></p>
+                    <p id = "textHurigana" class="text"></p>
+                    <p id ="morseJapanese" class="text"></p>
+                    <button class="button" onmousedown="mousedown()" onmouseup="mouseup()" >クリック</button><br>
+                    <script type="module" src="scripts/mohan.js"></script>
+                </div>
+            </div>
+            <div class="conversion-wrapper">
+                <div class="container">
+                    <ul class="list">
+                        <li>あ : ーー・ーー</li>
+                        <li>い : ・ー</li>
+                        <li>う : ・・ー</li>
+                        <li>え : ー・ーーー</li>
+                        <li>お : ・ー・・・</li>
+                        <li>か : ・ー・・</li>
+                        <li>き : ー・ー・・</li>
+                        <li>く : ・・・ー</li>
+                        <li>け : ー・ーー</li>
+                        <li>こ : ーーーー</li>
+                        <li>さ : ー・ー・ー</li>
+                        <li>し : ーー・ー・</li>
+                        <li>す : ーーー・ー</li>
+                        <li>せ : ・ーーー・</li>
+                        <li>そ : ーーー・</li>
+                        <li>た : ー・</li>
+                        <li>ち : ・・ー・</li>
+                        <li>つ : ・ーー・</li>
+                        <li>て : ・ー・ーー</li>
+                        <li>と : ・・ー・・</li>
+                        <li>な : ・ー・</li>
+                        <li>に : ー・ー・</li>
+                        <li>ぬ : ・・・・</li>
+                        <li>ね : ーー・ー</li>
+                        <li>の : ・・ーー</li>
+                        <li>は : ー・・・</li>
+                        <li>ひ : ーー・・ー</li>
+                        <li>ふ : ーー・・</li>
+                        <li>へ : ・</li>
+                        <li>ほ : ー・・</li>
+                        <li>ま : ー・・ー</li>
+                        <li>み : ・・ー・ー</li>
+                        <li>む : ー</li>
+                        <li>め : ー・・・ー</li>
+                        <li>も : ー・・ー・</li>
+                        <li>や : ・ーー</li>
+                        <li></li>
+                        <li>ゆ : ー・・ーー</li>
+                        <li></li>
+                        <li>よ : ーー</li>
+                        <li>ら : ・・・</li>
+                        <li>り : ーー・</li>
+                        <li>る : ー・ーー・</li>
+                        <li>れ : ーーー</li>
+                        <li>ろ : ・ー・ー</li>
+                        <li>わ : ー・ー</li>
+                        <li>ゐ : ・ー・・ー</li>
+                        <li>ゑ : ・ーー・・</li>
+                        <li>を : ・ーーー</li>
+                        <li>ん : ・ー・ー・</li>
+                        <li>゛ : ・・</li>
+                        <li>゜ : ・・ーー・</li>
+                        <li>ー : ・ーー・ー</li>
+                        <li>、 : ・ー・ー・ー</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="aiChatToggleElement" class="page-content is-hidden">
+            <div class="container">
+                <div class="apikeyGet">
+                    <input type="password" placeholder="APIキーを入力">
+                </div>
+                <div class="chat-wrapper">
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
