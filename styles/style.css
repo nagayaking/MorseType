@@ -179,3 +179,16 @@ main {
 .getApi::placeholder {
     color: #888;
 }
+
+.talk-wrapper {
+    height: 390px;
+    width: 90%;
+    background-color: #25272a;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 1em;
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 20px;
+}

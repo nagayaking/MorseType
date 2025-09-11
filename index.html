@@ -104,8 +104,15 @@
             </div>
         </div>
         <div id="aiChatToggleElement" class="page-content is-hidden">
-            <input type="password" placeholder="APIキーを入力" class="getApi">
+            <input type="password" id="APIkey" placeholder="APIキーを入力" class="getApi">
+            <button onclick="clickBtn()">取得</button>
             <div class="talk-wrapper">
+                <h1>Gemini 会話アプリ</h1>
+                <div id="chat-container"></div>
+                <div id="input-container">
+                    <input type="text" id="user-input" placeholder="メッセージを入力...">
+                    <button id="send-btn">送信</button>
+                </div>
                 <script src="scripts/aichat.js"></script>
             </div>
         </div>
