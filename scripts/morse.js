@@ -5,7 +5,7 @@ let id;
 let word = "";
 let words=[];
 let num = 0;
-let morseGain = 0.5;
+var morseGain = 0.5;
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -274,3 +274,31 @@ function restartMorsePractice() {
 
 // 作成した関数を、他のJavaScriptファイルから呼び出せるようにする
 window.restartMorsePractice = restartMorsePractice;
+
+function playClickSound() {
+  // Use the existing AudioContext if available, otherwise create a new one.
+  const audioContext = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  if (!window.audioCtx) {
+    window.audioCtx = audioContext;
+  }
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.frequency.value = 880; // A tone like the morse sound
+  oscillator.type = 'sine';
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  // Use the morseGain value, defaulting if not available.
+  const clickVolume = typeof morseGain !== 'undefined' ? morseGain : 0.5;
+  gainNode.gain.setValueAtTime(clickVolume, audioContext.currentTime);
+
+  // Play a very short sound
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.07); // 70ms duration
+}
+
+// Expose the function to be used in other scripts
+window.playClickSound = playClickSound;

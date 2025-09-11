@@ -163,11 +163,19 @@ main {
     box-sizing: border-box;
 }
 
+.APIgetform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
 .getApi {
     width: 80%;
     max-width: 500px;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-right: 8px;
     background-color: #25272a;
     border: 1px solid #555;
     border-radius: 5px;
@@ -178,6 +186,22 @@ main {
 
 .getApi::placeholder {
     color: #888;
+}
+
+.APIgetform button {
+    padding: 12px 20px;
+    background-color: #53aeff;
+    border: 1px solid #53aeff;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.APIgetform button:hover {
+    background-color: #8acdff;
+    border-color: #8acdff;
 }
 
 .talk-wrapper {
@@ -191,4 +215,73 @@ main {
     text-align: left;
     padding: 10px;
     margin-bottom: 20px;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between messages */
+    padding: 10px; /* Changed from 10px 0 */
+    height: 300px; /* Give it a height within the wrapper */
+    overflow-y: auto;
+}
+
+/* Common style for all message bubbles */
+#chat-container > div {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word; /* Break long words */
+    line-height: 1.4;
+}
+
+/* User message bubble */
+.user {
+    background-color: #53aeff; /* Blue, consistent with the button */
+    color: white;
+    border-radius: 15px 15px 0 15px; /* "Tail" effect */
+    align-self: flex-end; /* Align to the right */
+}
+
+/* Model message bubble */
+.model {
+    background-color: #404245; /* A darker gray */
+    color: white;
+    border-radius: 15px 15px 15px 0; /* "Tail" effect on the other side */
+    align-self: flex-start; /* Align to the left */
+}
+
+/* System message style */
+.system {
+    background-color: #ff5c5c; /* Red for errors */
+    color: white;
+    align-self: center;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Webkit Scrollbar Styling */
+#chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+    background: #25272a;
+    border-radius: 4px;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+    border: 2px solid #25272a;
+}
+
+#chat-container::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+}
+
+.user {
+    color: black;
+    text-align: right;
+    background-color: #dcf8c6;
 }
