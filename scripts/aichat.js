@@ -9,7 +9,6 @@ function clickBtn() {
 
 const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
-const sendBtn = document.getElementById('send-btn');
 
 // 会話履歴を保存する配列
 let history = []; 
@@ -42,8 +41,40 @@ function addMessageToHistory(role, text) {
 let aiAudioCtx;
 let aiOscillator = null;
 
+
+const morseToJapaneseMap = {
+  "ーー・ーー":"あ","・ー":"い","・・ー":"う","ー・ーーー":"え","・ー・・・":"お",
+  "・ー・・":"か","ー・ー・・":"き","・・・ー":"く","ー・ーー":"け","ーーーー":"こ",
+  "ー・ー・ー":"さ","ーー・ー・":"し","ーーー・ー":"す","・ーーー・":"せ","ーーー・":"そ",
+  "ー・":"た","・・ー・":"ち","・ーー・":"つ","・ー・ーー":"て","・・ー・・":"と",
+  "・ー・":"な","ー・ー・":"に","・・・・":"ぬ","ーー・ー":"ね","・・ーー":"の",
+  "ー・・・":"は","ーー・・ー":"ひ","ーー・・":"ふ","・":"へ","ー・・":"ほ",
+  "ー・・ー":"ま","・・ー・ー":"み","ー":"む","ー・・・ー":"め","ー・・ー・":"も",
+  "・ーー":"や","ー・・ーー":"ゆ","ーー":"よ",
+  "・・・":"ら","ーー・":"り","ー・ーー・":"る","ーーー":"れ","・ー・ー":"ろ",
+  "ー・ー":"わ","・ー・・ー":"ゐ","・ーー・・":"ゑ","・ーーー":"を","・ー・ー・":"ん",
+  
+  "・・":"゛",//濁点
+  "・・ーー・":"゜",//半濁点
+  "・ーー・ー":"ー",//長音
+  "・ー・ー・ー":"、"//読点
+}
+
+let startTime = 0;
+let endTime = 0;
+let intervalTime = 0;
+let judgeTime = 200;
+let aiID;
+let currentMorseCode = "";
+let bufferMorseCode = "";
+let text = "";
+let screenText = ["",""];
+
 // Function to start the sound
 function aiMouseDown() {
+  startTime = performance.now();
+  clearTimeout(aiID);
+
   if (!aiAudioCtx) {
     aiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -70,16 +101,43 @@ function aiMouseDown() {
 
 // Function to stop the sound
 function aiMouseUp() {
+  endTime = performance.now();
+  intervalTime = endTime -startTime;
+
+  if (intervalTime <= judgeTime) {
+    currentMorseCode = "・";
+  } else {
+    currentMorseCode = "ー";
+  }
+
+  bufferMorseCode += currentMorseCode;
+  screenText[1] = bufferMorseCode;
+  document.getElementById("aitext").textContent = screenText.join("");
+  aiID = setTimeout(conversion, judgeTime, bufferMorseCode, morseToJapaneseMap);
+
   if (aiOscillator) {
     aiOscillator.stop();
     aiOscillator = null;
   }
 }
 
-// Assign events to the button
-sendBtn.addEventListener('mousedown', aiMouseDown);
-sendBtn.addEventListener('mouseup', aiMouseUp);
-sendBtn.addEventListener('mouseleave', aiMouseUp); // Also stop sound if mouse leaves button
+// 文字を変換して画面に表示する
+function conversion(string, base) {
+  if (string === bufferMorseCode && base[string]!==undefined ) {
+    text += base[string];
+  }
+  bufferMorseCode = "";
+  screenText = [text, bufferMorseCode];
+  document.getElementById("aitext").textContent = screenText.join("");
+}
+
+function aiMouseLeave() {
+  if (aiOscillator) {
+    aiOscillator.stop();
+    aiOscillator = null;
+  }
+  clearTimeout(aiID);
+}
 
 // Send message on Enter key
 userInput.addEventListener('keydown', (e) => {
@@ -91,13 +149,13 @@ userInput.addEventListener('keydown', (e) => {
 // --- Send Message Logic ---
 
 async function sendMessage() {
-    const userMessage = userInput.value;
-    if (userMessage.trim() === '') return;
+    if (text.trim() === '') return;
 
     // Add user's message to chat and history
     addMessageToChat(userRole, userMessage);
     addMessageToHistory(userRole, userMessage);
-    userInput.value = '';
+    text = "";
+    screenText =["",""];
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {

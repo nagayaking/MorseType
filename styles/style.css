@@ -205,7 +205,7 @@ main {
 }
 
 .talk-wrapper {
-    height: 390px;
+    height: 350px;
     width: 90%;
     background-color: #25272a;
     border: 1px solid #555;
@@ -278,6 +278,45 @@ main {
 
 #chat-container::-webkit-scrollbar-thumb:hover {
     background-color: #777;
+}
+
+#input-container {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#userInput {
+    flex-grow: 1;
+    display: flex;
+    background-color: #25272a;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    text-align: left;
+}
+
+#aitext {
+    margin: 0;
+}
+
+#send-btn {
+    padding: 12px 20px;
+    background-color: #53aeff;
+    border: 1px solid #53aeff;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#send-btn:hover {
+    background-color: #8acdff;
+    border-color: #8acdff;
 }
 
 .user {

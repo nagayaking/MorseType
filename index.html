@@ -112,11 +112,15 @@
                 <div id="chat-container">
                     <!-- ここにメッセージが入る　-->
                 </div>
-                <div id="input-container">
-                    <div class="input"></div>
-                    <button id="send-btn" onmousedown="aimousedown()" onmouseout="aimouseup()">クリック</button>
+            </div>
+            <div id="input-container">
+                <div class="input"></div>
+                <div id="userInput">
+                    <p id="aitext"></p>
                 </div>
-                <script src="scripts/aichat.js"></script>
+                <button id="send-btn" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()">クリック</button>
+            </div>
+            <script src="scripts/aichat.js"></script>
             </div>
         </div>
     </main>

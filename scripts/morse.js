@@ -235,6 +235,15 @@ function mouseup() {
   id = setTimeout(cnv, interval);
 }
 
+function mouseLeave() {
+  if (oscillator) {
+    oscillator.stop();
+    oscillator = null;
+    gainNode = null;
+  }
+  clearTimeout(id);
+}
+
 // input要素
 const inputElem = document.getElementById('volume');
 
