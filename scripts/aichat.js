@@ -9,6 +9,7 @@ function clickBtn() {
 
 const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
+const aiText = document.getElementById("aitext");
 
 // 会話履歴を保存する配列
 let history = []; 
@@ -112,7 +113,7 @@ function aiMouseUp() {
 
   bufferMorseCode += currentMorseCode;
   screenText[1] = bufferMorseCode;
-  document.getElementById("aitext").textContent = screenText.join("");
+  aiText.textContent = screenText.join("");
   aiID = setTimeout(conversion, judgeTime, bufferMorseCode, morseToJapaneseMap);
 
   if (aiOscillator) {
@@ -128,7 +129,7 @@ function conversion(string, base) {
   }
   bufferMorseCode = "";
   screenText = [text, bufferMorseCode];
-  document.getElementById("aitext").textContent = screenText.join("");
+  aiText.textContent = screenText.join("");
 }
 
 function aiMouseLeave() {
@@ -140,22 +141,29 @@ function aiMouseLeave() {
 }
 
 // Send message on Enter key
-userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
+const sendBtn = document.getElementById('send-btn');
+if (sendBtn) {
+    sendBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Stop default behavior
+            sendMessage();
+        }
+    });                                               
+}                                                       
 
 // --- Send Message Logic ---
 
 async function sendMessage() {
-    if (text.trim() === '') return;
+    const userMessage = text.trim();
+    if (userMessage === '') return;
 
     // Add user's message to chat and history
     addMessageToChat(userRole, userMessage);
     addMessageToHistory(userRole, userMessage);
     text = "";
     screenText =["",""];
+    aiText.textContent = screenText.join("");
+    
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
