@@ -324,3 +324,12 @@ main {
     text-align: right;
     background-color: #dcf8c6;
 }
+
+.model .toggle-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 1.2em;
+}
