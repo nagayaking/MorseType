@@ -222,7 +222,7 @@ main {
     flex-direction: column;
     gap: 10px; /* Space between messages */
     padding: 10px; /* Changed from 10px 0 */
-    height: 300px; /* Give it a height within the wrapper */
+    height: 330px; /* Give it a height within the wrapper */
     overflow-y: auto;
 }
 
@@ -332,4 +332,18 @@ main {
     cursor: pointer;
     margin-right: 8px;
     font-size: 1.2em;
+}
+
+.model .play-sound-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.model .play-sound-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }

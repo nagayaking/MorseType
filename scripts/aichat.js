@@ -19,32 +19,51 @@ const userRole = 'user';
 const modelRole = 'model';
 
 // メッセージをチャットコンテナに表示する関数
-function addMessageToChat(sender, message) {
+function addMessageToChat(sender, message, morseMessage = null) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add(sender);
 
     if (sender === modelRole) {
-        const messageContent = document.createElement('span');
-        messageContent.textContent = message;
-        messageContent.style.display = 'none'; // デフォルトで非表示
+        const hiraganaMessage = document.createElement('span');
+        hiraganaMessage.textContent = message;
+        hiraganaMessage.style.display = 'none'; // デフォルトで非表示
+
+        const morseCodeMessage = document.createElement('span');
+        morseCodeMessage.textContent = morseMessage;
+        morseCodeMessage.style.display = 'block';
 
         const toggleButton = document.createElement('button');
         toggleButton.classList.add('toggle-button');
-        toggleButton.title = 'ひらがなを表示';
+        toggleButton.title = '日本語/モールス信号 切替';
 
         const icon = document.createElement('i');
-        icon.classList.add('fa-solid', 'fa-eye-slash'); // 初期アイコンを非表示状態に
+        icon.classList.add('fa-solid', 'fa-language');
         toggleButton.appendChild(icon);
 
         toggleButton.addEventListener('click', () => {
-            const isHidden = messageContent.style.display === 'none';
-            messageContent.style.display = isHidden ? '' : 'none';
-            icon.classList.toggle('fa-eye', isHidden);
-            icon.classList.toggle('fa-eye-slash', !isHidden);
+            const isHidden = hiraganaMessage.style.display === 'none';
+            hiraganaMessage.style.display = isHidden ? 'block' : 'none';
+            morseCodeMessage.style.display = isHidden ? 'none' : 'block';
+        });
+
+        const playSoundButton = document.createElement('button');
+        playSoundButton.classList.add('play-sound-button');
+        playSoundButton.title = 'モールス信号を再生';
+        const soundIcon = document.createElement('i');
+        soundIcon.classList.add('fa-solid', 'fa-volume-high');
+        playSoundButton.appendChild(soundIcon);
+
+        playSoundButton.addEventListener('click', () => {
+            playSoundButton.disabled = true; // Disable button
+            playMorseSound(morseMessage).finally(() => {
+                playSoundButton.disabled = false; // Re-enable button
+            });
         });
 
         messageDiv.appendChild(toggleButton);
-        messageDiv.appendChild(messageContent);
+        messageDiv.appendChild(playSoundButton);
+        messageDiv.appendChild(hiraganaMessage);
+        messageDiv.appendChild(morseCodeMessage);
     } else {
         messageDiv.textContent = message;
     }
@@ -219,6 +238,57 @@ function converJapaneseToMorse(inputText) {
     .join('|'); // 4. 配列の要素を結合して文字列に戻す
 }
 
+// --- Morse Code Sound Playback ---
+
+const dotDuration = 100;
+const dashDuration = dotDuration * 3;
+const symbolPause = dotDuration;
+const charPause = dotDuration * 3;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function playUnit(duration) {
+    return new Promise(resolve => {
+        if (!aiAudioCtx) {
+            aiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        const oscillator = aiAudioCtx.createOscillator();
+        const gainNode = aiAudioCtx.createGain();
+        
+        oscillator.frequency.value = 880;
+        oscillator.type = 'sine';
+        oscillator.connect(gainNode);
+        gainNode.connect(aiAudioCtx.destination);
+        
+        const volume = document.getElementById('volume').value;
+        gainNode.gain.setValueAtTime(parseFloat(volume), aiAudioCtx.currentTime);
+
+        oscillator.start(aiAudioCtx.currentTime);
+        oscillator.stop(aiAudioCtx.currentTime + duration / 1000);
+        
+        setTimeout(resolve, duration);
+    });
+}
+
+async function playMorseSound(morseString) {
+    if (!morseString) return;
+
+    for (const symbol of morseString) {
+        if (symbol === '・') {
+            await playUnit(dotDuration);
+            await sleep(symbolPause);
+        } else if (symbol === 'ー') {
+            await playUnit(dashDuration);
+            await sleep(symbolPause);
+        } else if (symbol === '|') {
+            await sleep(charPause - symbolPause);
+        }
+    }
+}
+
 // --- Send Message Logic ---
 
 async function sendMessage() {
@@ -251,7 +321,7 @@ async function sendMessage() {
         const geminiResponse = [data.candidates[0].content.parts[0].text, converJapaneseToMorse(data.candidates[0].content.parts[0].text)];
         
         // Add Gemini's response to chat and history
-        addMessageToChat(modelRole, geminiResponse[0]);
+        addMessageToChat(modelRole, geminiResponse[0], geminiResponse[1]);
         addMessageToHistory(modelRole, geminiResponse[0]);
         console.log(geminiResponse)
 
