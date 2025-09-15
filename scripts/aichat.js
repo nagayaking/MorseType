@@ -22,6 +22,7 @@ const modelRole = 'model';
 function addMessageToChat(sender, message, morseMessage = null) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add(sender);
+    let playSoundButton = null;
 
     if (sender === modelRole) {
         const hiraganaMessage = document.createElement('span');
@@ -46,7 +47,7 @@ function addMessageToChat(sender, message, morseMessage = null) {
             morseCodeMessage.style.display = isHidden ? 'none' : 'block';
         });
 
-        const playSoundButton = document.createElement('button');
+        playSoundButton = document.createElement('button');
         playSoundButton.classList.add('play-sound-button');
         playSoundButton.title = 'モールス信号を再生';
         const soundIcon = document.createElement('i');
@@ -72,6 +73,8 @@ function addMessageToChat(sender, message, morseMessage = null) {
     
     // スクロールを一番下にする
     chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    return playSoundButton;
 }
 
 // メッセージを履歴に追加する関数
@@ -321,8 +324,16 @@ async function sendMessage() {
         const geminiResponse = [data.candidates[0].content.parts[0].text, converJapaneseToMorse(data.candidates[0].content.parts[0].text)];
         
         // Add Gemini's response to chat and history
-        addMessageToChat(modelRole, geminiResponse[0], geminiResponse[1]);
+        const playButton = addMessageToChat(modelRole, geminiResponse[0], geminiResponse[1]);
         addMessageToHistory(modelRole, geminiResponse[0]);
+
+        if (playButton) {
+            playButton.disabled = true;
+            playMorseSound(geminiResponse[1]).finally(() => {
+                playButton.disabled = false;
+            });
+        }
+
         console.log(geminiResponse)
 
     } catch (error) {
