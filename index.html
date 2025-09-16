@@ -28,11 +28,16 @@
                         <p class="icon-logo">AI</p>
                     </span>
                 </button>
+                <button id="settingsToggleButton" class="icon">
+                    <span title="Settings">
+                        <i class="fa-solid fa-gear" style="color: #ffffff;"></i>
+                    </span>
+                </button>
             </div>
         </div>
     </header>
     <main>
-        <div id="practiceToggleElement" class="page-content is-hidden">
+        <div id="practiceToggleElement" class="page-content">
             <div class="morse-wrapper">
                 <div class="container">
                     <p id ="textJapanese"></p>
@@ -103,14 +108,13 @@
                 </div>
             </div>
         </div>
-        <div id="aiChatToggleElement" class="page-content">
+        <div id="aiChatToggleElement" class="page-content is-hidden">
             <div class="APIgetform">
                 <input type="password" id="APIkey" placeholder="APIキーを入力" class="getApi">
                 <button onclick="clickBtn()">取得</button>
             </div>
             <div class="talk-wrapper">
                 <div id="chat-container">
-                    <!-- ここにメッセージが入る　-->
                 </div>
             </div>
             <div id="input-container">
@@ -124,5 +128,12 @@
             </div>
         </div>
     </main>
+    <div id="settings-screen" class="settings-screen">
+        <div class="settings-container">
+            <button class="close-btn">&times;</button>
+            <h2>Settings</h2>
+            <!-- 設定項目をここに追加 -->
+        </div>
+    </div>
 </body>
 </html>
