@@ -211,7 +211,7 @@ function mousedown() {
   gainNode.connect(audioCtx.destination);
 
   // 音量を設定
-  gainNode.gain.setValueAtTime(morseGain, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(window.typingVolume, audioCtx.currentTime);
 
   // 再生開始
   oscillator.start();
@@ -251,23 +251,7 @@ function mouseLeave() {
   clearTimeout(id);
 }
 
-// input要素
-const inputElem = document.getElementById('volume');
 
-
-// inputイベント時に値をセットする関数
-const rangeOnChange = (e) =>{
-  morseGain = e.target.value
-}
-
-window.onload = () => {
-  // 変更に合わせてイベントを発火する
-  inputElem.addEventListener('input', rangeOnChange);
-  // ページ読み込み時の値をセット
-}
-
-document.addEventListener("DOMContentLoaded", reset());
-inputElem.addEventListener("input", rangeOnChange);
 
 /**
  * ゲームの状態をリセットして最初から始めるための関数
@@ -307,8 +291,8 @@ function playClickSound() {
   oscillator.connect(gainNode);
   gainNode.connect(audioContext.destination);
 
-  // Use the morseGain value, defaulting if not available.
-  const clickVolume = typeof morseGain !== 'undefined' ? morseGain : 0.5;
+  // Use the global typingVolume value, defaulting if not available.
+  const clickVolume = typeof window.typingVolume !== 'undefined' ? window.typingVolume : 0.5;
   gainNode.gain.setValueAtTime(clickVolume, audioContext.currentTime);
 
   // Play a very short sound
@@ -318,3 +302,7 @@ function playClickSound() {
 
 // Expose the function to be used in other scripts
 window.playClickSound = playClickSound;
+
+// Initialize the practice mode when the DOM is loaded
+document.addEventListener("DOMContentLoaded", reset);
+

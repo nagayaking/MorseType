@@ -161,9 +161,9 @@ function aiMouseDown() {
   aiOscillator.connect(gainNode);
   gainNode.connect(aiAudioCtx.destination);
   
-  // Use morseGain from morse.js if available, otherwise default
-  const volume = typeof morseGain !== 'undefined' ? morseGain : 0.5;
-  gainNode.gain.setValueAtTime(volume, aiAudioCtx.currentTime);
+  // Use the global typingVolume value, defaulting if not available
+  const volume = typeof window.typingVolume !== 'undefined' ? window.typingVolume : 0.5;
+  gainNode.gain.setValueAtTime(parseFloat(volume), aiAudioCtx.currentTime);
   
   aiOscillator.start();
 }
@@ -266,7 +266,7 @@ function playUnit(duration) {
         oscillator.connect(gainNode);
         gainNode.connect(aiAudioCtx.destination);
         
-        const volume = document.getElementById('volume').value;
+        const volume = window.playbackVolume;
         gainNode.gain.setValueAtTime(parseFloat(volume), aiAudioCtx.currentTime);
 
         oscillator.start(aiAudioCtx.currentTime);

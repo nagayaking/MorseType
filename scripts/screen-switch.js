@@ -9,6 +9,7 @@ const aiChatToggleElement = document.getElementById("aiChatToggleElement");
 const settingsToggleButton = document.getElementById("settingsToggleButton");
 const settingsScreen = document.getElementById("settings-screen");
 const closeBtn = document.querySelector('.close-btn');
+const overlay = document.getElementById('overlay');
 
 // 「練習」ボタンがクリックされたときの処理
 practiceToggleButton.addEventListener('click', () => {
@@ -27,27 +28,43 @@ aiChatToggleButton.addEventListener( "click", () => {
 
 // --- Settings Screen Logic --- //
 
-// Open settings with the gear icon
-settingsToggleButton.addEventListener('click', (event) => {
-    // このイベントがbodyのリスナーに伝わってすぐに画面が閉じるのを防ぐ
-    event.stopPropagation(); 
+function openSettings() {
     settingsScreen.classList.add('is-active');
-});
+    overlay.classList.add('is-active');
+}
+
+function closeSettings() {
+    settingsScreen.classList.remove('is-active');
+    overlay.classList.remove('is-active');
+}
+
+// Open settings with the gear icon
+settingsToggleButton.addEventListener('click', openSettings);
 
 // Close settings with the 'X' button
-closeBtn.addEventListener('click', () => {
-    settingsScreen.classList.remove('is-active');
-});
+closeBtn.addEventListener('click', closeSettings);
 
-// Stop propagation when clicking inside the settings screen
-// これがないと、設定画面内のクリックもbodyのリスナーに拾われて画面が閉じてしまう
+// Close settings by clicking on the overlay
+overlay.addEventListener('click', closeSettings);
+
+// Prevent clicks inside the settings screen from closing it
 settingsScreen.addEventListener('click', (event) => {
     event.stopPropagation();
 });
 
-// Close settings when clicking outside (on the main content)
-document.body.addEventListener('click', () => {
-    if (settingsScreen.classList.contains('is-active')) {
-        settingsScreen.classList.remove('is-active');
-    }
+// --- Volume Control Logic --- //
+
+const typingVolumeSlider = document.getElementById('volume-typing');
+const playbackVolumeSlider = document.getElementById('volume-playback');
+
+// Set initial volumes and make them globally accessible
+window.typingVolume = typingVolumeSlider.value;
+window.playbackVolume = playbackVolumeSlider.value;
+
+typingVolumeSlider.addEventListener('input', (event) => {
+    window.typingVolume = event.target.value;
+});
+
+playbackVolumeSlider.addEventListener('input', (event) => {
+    window.playbackVolume = event.target.value;
 });

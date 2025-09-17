@@ -16,8 +16,6 @@
                 <h1>MorseType</h1>
             </a>
             <div class="header-right">
-                <input type="range" id="volume" name="volume" min="0" max="1" step="0.05" />
-                <label for="volume"><i class="fa-solid fa-volume-high" style="color: #ffffff;"></i></label>
                 <button id="practiceToggleButton" class="icon">
                     <span title="Practice">
                         <i class="fa-solid fa-computer-mouse" style="color: #ffffff;"></i>
@@ -36,6 +34,7 @@
             </div>
         </div>
     </header>
+    <div id="overlay" class="overlay"></div>
     <main>
         <div id="practiceToggleElement" class="page-content">
             <div class="morse-wrapper">
@@ -123,6 +122,7 @@
                     <p id="aitext"></p>
                 </div>
                 <button id="send-btn" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()">クリック</button>
+                <button id="morseListButton">対応表</button>
             </div>
             <script src="scripts/aichat.js"></script>
             </div>
@@ -132,6 +132,18 @@
         <div class="settings-container">
             <button class="close-btn">&times;</button>
             <h2>Settings</h2>
+            <div class="setting-item">
+                <h3><i class="fa-solid fa-keyboard"></i> Typing Volume</h3>
+                <div class="volume-control">
+                    <input type="range" id="volume-typing" name="volume-typing" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+            </div>
+            <div class="setting-item">
+                <h3><i class="fa-solid fa-headphones"></i> Playback Volume</h3>
+                <div class="volume-control">
+                    <input type="range" id="volume-playback" name="volume-playback" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+            </div>
             <!-- 設定項目をここに追加 -->
         </div>
     </div>
