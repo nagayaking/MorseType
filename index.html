@@ -36,14 +36,19 @@
     </header>
     <div id="overlay" class="overlay"></div>
     <main>
-        <div id="practiceToggleElement" class="page-content">
+        <div id="practiceToggleElement" class="page-content is-hidden">
             <div class="morse-wrapper">
+                <button id="listeningPracticeButton" class="icon">
+                    <span title="Listening Practice">
+                        <i class="fa-solid fa-headphones" style="color: #ffffff;"></i>
+                    </span>
+                </button>
                 <div class="container">
                     <p id ="textJapanese"></p>
                     <p id = "textHurigana" class="text"></p>
                     <p id ="morseJapanese" class="text"></p>
                     <button class="morse-button" onmousedown="mousedown()" onmouseup="mouseup()" >クリック</button><br>
-                    <script src="scripts/morse.js"></script>
+                    <script src="scripts/practice-type.js"></script>
                 </div>
             </div>
             <div class="conversion-wrapper">
@@ -125,6 +130,87 @@
                 <button id="morseListButton">対応表</button>
             </div>
             <script src="scripts/aichat.js"></script>
+            </div>
+        </div>
+        <div id="listeningPracticeElement" class="page-content">
+            <div class="container listening-practice-container">
+                <button id="backToPracticeButton" class="icon">
+                    <span title="Back to Practice">
+                        <i class="fa-solid fa-arrow-left" style="color: #ffffff;"></i>
+                    </span>
+                </button>
+                <h2>リスニング練習</h2>
+                <!-- ここにリスニング練習のコンテンツを追加します -->
+                <div class="questions">
+                    <div class="questions-container">
+                        <div id="question-statement">問題文</div>
+                        <div class="question-hurigana">もんだいぶん</div>
+                        <button class="choice" id="choice1">選択肢１</button>
+                        <button class="choice" id="choice2">選択肢２</button>
+                        <button class="choice" id="choice3">選択肢３</button>
+                        <button class="choice" id="choice4">選択肢４</button>
+                    </div>
+                    <div class="conversion-wrapper">
+                        <div class="container">
+                            <ul class="list">
+                                <li>ーー・ーー : あ</li>
+                                <li>・ー : い</li>
+                                <li>・・ー : う</li>
+                                <li>ー・ーーー : え</li>
+                                <li>・ー・・・ : お</li>
+                                <li>・ー・・ : か</li>
+                                <li>ー・ー・・ : き</li>
+                                <li>・・・ー : く</li>
+                                <li>ー・ーー : け</li>
+                                <li>ーーーー : こ</li>
+                                <li>ー・ー・ー : さ</li>
+                                <li>ーー・ー・ : し</li>
+                                <li>ーーー・ー : す</li>
+                                <li>・ーーー・ : せ</li>
+                                <li>ーーー・ : そ</li>
+                                <li>ー・ : た</li>
+                                <li>・・ー・ : ち</li>
+                                <li>・ーー・ : つ</li>
+                                <li>・ー・ーー : て</li>
+                                <li>・・ー・・ : と</li>
+                                <li>・ー・ : な</li>
+                                <li>ー・ー・ : に</li>
+                                <li>・・・・ : ぬ</li>
+                                <li>ーー・ー : ね</li>
+                                <li>・・ーー : の</li>
+                                <li>ー・・・ : は</li>
+                                <li>ーー・・ー : ひ</li>
+                                <li>ーー・・ : ふ</li>
+                                <li>・ : へ</li>
+                                <li>ー・・ : ほ</li>
+                                <li>ー・・ー : ま</li>
+                                <li>・・ー・ー : み</li>
+                                <li>ー : む</li>
+                                <li>ー・・・ー : め</li>
+                                <li>ー・・ー・ : も</li>
+                                <li>・ーー : や</li>
+                                <li></li>
+                                <li>ー・・ーー : ゆ</li>
+                                <li></li>
+                                <li>ーー : よ</li>
+                                <li>・・・ : ら</li>
+                                <li>ーー・ : り</li>
+                                <li>ー・ーー・ : る</li>
+                                <li>ーーー : れ</li>
+                                <li>・ー・ー : ろ</li>
+                                <li>ー・ー : わ</li>
+                                <li>・ー・・ー : ゐ</li>
+                                <li>・ーー・・ : ゑ</li>
+                                <li>・ーーー : を</li>
+                                <li>・ー・ー・ : ん</li>
+                                <li>・・ : ゛</li>
+                                <li>・・ーー・ : ゜</li>
+                                <li>・ーー・ー : ー</li>
+                                <li>・ー・ー・ー : 、</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="morse-table-modal" class="modal is-hidden">

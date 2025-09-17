@@ -6,6 +6,10 @@ const practiceToggleElement = document.getElementById("practiceToggleElement");
 const aiChatToggleButton = document.getElementById("aiChatToggleButton");
 const aiChatToggleElement = document.getElementById("aiChatToggleElement");
 
+const listeningPracticeButton = document.getElementById("listeningPracticeButton");
+const listeningPracticeElement = document.getElementById("listeningPracticeElement");
+const backToPracticeButton = document.getElementById("backToPracticeButton");
+
 const settingsToggleButton = document.getElementById("settingsToggleButton");
 const settingsScreen = document.getElementById("settings-screen");
 const closeBtn = document.querySelector('.close-btn');
@@ -15,6 +19,7 @@ const overlay = document.getElementById('overlay');
 practiceToggleButton.addEventListener('click', () => {
     practiceToggleElement.classList.remove('is-hidden');
     aiChatToggleElement.classList.add('is-hidden');
+    listeningPracticeElement.classList.add('is-hidden');
     if (typeof window.restartMorsePractice === 'function') {
         window.restartMorsePractice();
     }
@@ -24,7 +29,23 @@ practiceToggleButton.addEventListener('click', () => {
 aiChatToggleButton.addEventListener( "click", () => {
     aiChatToggleElement.classList.remove('is-hidden');
     practiceToggleElement.classList.add('is-hidden');
+    listeningPracticeElement.classList.add('is-hidden');
 });
+
+// 「リスニング練習」ボタンがクリックされたときの処理
+listeningPracticeButton.addEventListener('click', () => {
+    listeningPracticeElement.classList.remove('is-hidden');
+    practiceToggleElement.classList.add('is-hidden');
+    aiChatToggleElement.classList.add('is-hidden');
+});
+
+// 「練習に戻る」ボタンがクリックされたときの処理
+backToPracticeButton.addEventListener('click', () => {
+    practiceToggleElement.classList.remove('is-hidden');
+    listeningPracticeElement.classList.add('is-hidden');
+    aiChatToggleElement.classList.add('is-hidden');
+});
+
 
 // --- Settings Screen Logic --- //
 
