@@ -341,3 +341,64 @@ async function sendMessage() {
         addMessageToChat('system', 'エラーが発生しました。もう一度お試しください。');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const morseListButton = document.getElementById('morseListButton');
+    const modal = document.getElementById('morse-table-modal');
+    const closeButton = document.querySelector('.close-button');
+    const tableContainer = document.getElementById('morse-table-container');
+
+    const createMorseTable = () => {
+        tableContainer.innerHTML = '';
+
+        const characterGroups = [
+            ['あ', 'い', 'う', 'え', 'お'],
+            ['か', 'き', 'く', 'け', 'こ'],
+            ['さ', 'し', 'す', 'せ', 'そ'],
+            ['た', 'ち', 'つ', 'て', 'と'],
+            ['な', 'に', 'ぬ', 'ね', 'の'],
+            ['は', 'ひ', 'ふ', 'へ', 'ほ'],
+            ['ま', 'み', 'む', 'め', 'も'],
+            ['や', '', 'ゆ', '', 'よ'],
+            ['ら', 'り', 'る', 'れ', 'ろ'],
+            ['わ', 'ゐ', 'ゑ', 'を', 'ん'],
+            ['゛', '゜', 'ー', '、']
+        ];
+
+        const listContainer = document.createElement('div');
+        listContainer.className = 'morse-table-columns';
+
+        characterGroups.forEach(group => {
+            const column = document.createElement('ul');
+            group.forEach(char => {
+                const morse = japaneseToMorseMap[char] || '';
+                const item = document.createElement('li');
+                if (char) {
+                    item.textContent = `${char} : ${morse}`;
+                } else {
+                    item.innerHTML = '&nbsp;';
+                }
+                column.appendChild(item);
+            });
+            listContainer.appendChild(column);
+        });
+
+        tableContainer.appendChild(listContainer);
+    };
+
+    morseListButton.addEventListener('click', () => {
+        createMorseTable();
+        modal.classList.remove('is-hidden');
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.classList.add('is-hidden');
+    });
+
+    // Close modal if user clicks outside of the modal content
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('is-hidden');
+        }
+    });
+});
