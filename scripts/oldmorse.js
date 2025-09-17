@@ -7,9 +7,6 @@ let words=[];
 let num = 0;
 var morseGain = 0.5;
 
-// This will be controlled by the settings toggle
-window.isMorseGuideActive = true;
-
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 let oscillator = null;
@@ -17,43 +14,7 @@ let gainNode = null;
 
 const button = document.getElementById('soundButton');
 
-const morse_list_guide = {
-  "ーー・ーー|":"あ","・ー|":"い","・・ー|":"う","ー・ーーー|":"え","・ー・・・|":"お",
-  "・ー・・|":"か","ー・ー・・|":"き","・・・ー|":"く","ー・ーー|":"け","ーーーー|":"こ",
-  "ー・ー・ー|":"さ","ーー・ー・|":"し","ーーー・ー|":"す","・ーーー・|":"せ","ーーー・|":"そ",
-  "ー・|":"た","・・ー・|":"ち","・ーー・|":"つ","・ー・ーー|":"て","・・ー・・|":"と",
-  "・ー・|":"な","ー・ー・|":"に","・・・・|":"ぬ","ーー・ー|":"ね","・・ーー|":"の",
-  "ー・・・|":"は","ーー・・ー|":"ひ","ーー・・|":"ふ","・|":"へ","ー・・|":"ほ",
-  "ー・・ー|":"ま","・・ー・ー|":"み","ー|":"む","ー・・・ー|":"め","ー・・ー・|":"も",
-  "・ーー|":"や","ー・・ーー|":"ゆ","ーー|":"よ",
-  "・・・|":"ら","ーー・|":"り","ー・ーー・|":"る","ーーー|":"れ","・ー・ー|":"ろ",
-  "ー・ー|":"わ","・ー・・ー|":"ゐ","・ーー・・|":"ゑ","・ーーー|":"を","・ー・ー・|":"ん",
-
-  "・・|":"゛",//濁点
-  "・・ーー・|":"゜",//半濁点
-  "・ーー・ー|":"ー",//長音
-  "・ー・ー・ー|":"、"//読点
-}
-
-const morsecodeMap_guide = {
-  "あ":"ーー・ーー|","い":"・ー|","う":"・・ー|","え":"ー・ーーー|","お":"・ー・・・|",
-  "か":"・ー・・|","き":"ー・ー・・|","く":"・・・ー|","け":"ー・ーー|","こ":"ーーーー|",
-  "さ":"ー・ー・ー|","し":"ーー・ー・|","す":"ーーー・ー|","せ":"・ーーー・|","そ":"ーーー・|",
-  "た":"ー・|","ち":"・・ー・|","つ":"・ーー・|","て":"・ー・ーー|","と":"・・ー・・|",
-  "な":"・ー・|","に":"ー・ー・|","ぬ":"・・・・|","ね":"ーー・ー|","の":"・・ーー|",
-  "は":"ー・・・|","ひ":"ーー・・ー|","ふ":"ーー・・|","へ":"・|","ほ":"ー・・|",
-  "ま":"ー・・ー|","み":"・・ー・ー|","む":"ー|","め":"ー・・・ー|","も":"ー・・ー・|",
-  "や":"・ーー|","ゆ":"ー・・ーー|","よ":"ーー|",
-  "ら":"・・・|","り":"ーー・|","る":"ー・ーー・|","れ":"ーーー|","ろ":"・ー・ー|",
-  "わ":"ー・ー|","ゐ":"・ー・・ー|","ゑ":"・ーー・・|","を":"・ーーー|","ん":"・ー・ー・|",
-
-  "゛":"・・|",//濁点
-  "゜":"・・ーー・|",//半濁点
-  "ー":"・ーー・ー|",//長音
-  "、":"・ー・ー・ー|"//読点
-};
-
-const morse_list_no_guide = {
+const morse_list = {
   "ーー・ーー":"あ","・ー":"い","・・ー":"う","ー・ーーー":"え","・ー・・・":"お",
   "・ー・・":"か","ー・ー・・":"き","・・・ー":"く","ー・ーー":"け","ーーーー":"こ",
   "ー・ー・ー":"さ","ーー・ー・":"し","ーーー・ー":"す","・ーーー・":"せ","ーーー・":"そ",
@@ -71,7 +32,7 @@ const morse_list_no_guide = {
   "・ー・ー・ー":"、"//読点
 }
 
-const morsecodeMap_no_guide = {
+const morsecodeMap = {
   "あ":"ーー・ーー","い":"・ー","う":"・・ー","え":"ー・ーーー","お":"・ー・・・",
   "か":"・ー・・","き":"ー・ー・・","く":"・・・ー","け":"ー・ーー","こ":"ーーーー",
   "さ":"ー・ー・ー","し":"ーー・ー・","す":"ーーー・ー","せ":"・ーーー・","そ":"ーーー・",
@@ -88,9 +49,6 @@ const morsecodeMap_no_guide = {
   "ー":"・ーー・ー",//長音
   "、":"・ー・ー・ー"//読点
 };
-
-let morse_list = morse_list_guide;
-let morsecodeMap = morsecodeMap_guide;
 
 const conversionMap = {
   //濁音  
@@ -165,21 +123,11 @@ const shuffleArray = (array) => {
 let shuffledExample = shuffleArray(examples);
 
 const reset = () => {
-  if (window.isMorseGuideActive) {
-    morse_list = morse_list_guide;
-    morsecodeMap = morsecodeMap_guide;
-  } else {
-    morse_list = morse_list_no_guide;
-    morsecodeMap = morsecodeMap_no_guide;
-  }
-
   wordsBase = ["", replaceWithMap(shuffledExample[num][1], conversionMap)];
   morseBase = ["", replaceWithMap(wordsBase[1], morsecodeMap)];
   document.getElementById("textJapanese").innerHTML = shuffledExample[num][0];
   document.getElementById("textHurigana").innerHTML = `<span></span>${replaceWithMap(shuffledExample[num][1], conversionMap)}`;
-  const morseText = replaceWithMap(wordsBase[1], morsecodeMap);
-  const displayText = window.isMorseGuideActive ? morseText.replace(/\|/g, '　') : morseText;
-  document.getElementById("morseJapanese").innerHTML = `<span></span>${displayText}`;
+  document.getElementById("morseJapanese").innerHTML = `<span></span>${replaceWithMap(wordsBase[1], morsecodeMap)}`;
   num ++;
 }
 
@@ -214,19 +162,13 @@ const judgeMorse = (word, list) => {
 const colorChange = (text, file) => {
   const colors = ["color-white", "color-gray"];
   let newText = "";
-  if (file === "morseJapanese") {
-    const part1 = window.isMorseGuideActive ? text[0].replace(/\|/g, '　') : text[0];
-    const part2 = window.isMorseGuideActive ? text[1].replace(/\|/g, '　') : text[1];
-    newText = `<span class="${colors[0]}">${part1}</span>${part2}`;
-  } else {
-    newText = `<span class="${colors[0]}">${text[0]}</span>${text[1]}`;
-  }
+  newText = `<span class="${colors[0]}">${text[0]}</span>${text[1]}`;
   document.getElementById(file).innerHTML = newText;
 };
 
 //モールスを日本語に変換
 const cnv = () => {
-  let morse = window.isMorseGuideActive ? words + '|' : words;
+  let morse = words;
   if(morse_list[morse]!==NaN && morse_list[morse]!==undefined){
     word += morse_list[morse];
     wordsBase = judgeMorse(word,wordsBase);
@@ -262,7 +204,7 @@ function mousedown() {
   gainNode.connect(audioCtx.destination);
 
   // 音量を設定
-  gainNode.gain.setValueAtTime(window.typingVolume, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(morseGain, audioCtx.currentTime);
 
   // 再生開始
   oscillator.start();
@@ -279,7 +221,6 @@ function mouseup() {
   }else{
       mo = "ー"; //バー
   }
-
   morseBase = judgeMorse(mo, morseBase);
   colorChange(morseBase, "morseJapanese");
 
@@ -303,7 +244,23 @@ function mouseLeave() {
   clearTimeout(id);
 }
 
+// input要素
+const inputElem = document.getElementById('volume');
 
+
+// inputイベント時に値をセットする関数
+const rangeOnChange = (e) =>{
+  morseGain = e.target.value
+}
+
+window.onload = () => {
+  // 変更に合わせてイベントを発火する
+  inputElem.addEventListener('input', rangeOnChange);
+  // ページ読み込み時の値をセット
+}
+
+document.addEventListener("DOMContentLoaded", reset());
+inputElem.addEventListener("input", rangeOnChange);
 
 /**
  * ゲームの状態をリセットして最初から始めるための関数
@@ -343,8 +300,8 @@ function playClickSound() {
   oscillator.connect(gainNode);
   gainNode.connect(audioContext.destination);
 
-  // Use the global typingVolume value, defaulting if not available.
-  const clickVolume = typeof window.typingVolume !== 'undefined' ? window.typingVolume : 0.5;
+  // Use the morseGain value, defaulting if not available.
+  const clickVolume = typeof morseGain !== 'undefined' ? morseGain : 0.5;
   gainNode.gain.setValueAtTime(clickVolume, audioContext.currentTime);
 
   // Play a very short sound
@@ -354,6 +311,3 @@ function playClickSound() {
 
 // Expose the function to be used in other scripts
 window.playClickSound = playClickSound;
-
-// Initialize the practice mode when the DOM is loaded
-document.addEventListener("DOMContentLoaded", reset);

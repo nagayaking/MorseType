@@ -42,7 +42,7 @@
                     <p id ="textJapanese"></p>
                     <p id = "textHurigana" class="text"></p>
                     <p id ="morseJapanese" class="text"></p>
-                    <button class="button" onmousedown="mousedown()" onmouseup="mouseup()" >クリック</button><br>
+                    <button class="morse-button" onmousedown="mousedown()" onmouseup="mouseup()" >クリック</button><br>
                     <script src="scripts/morse.js"></script>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 <div id="userInput">
                     <p id="aitext"></p>
                 </div>
-                <button id="send-btn" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()">クリック</button>
+                <button id="send-btn" class="morse-button" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()">クリック</button>
                 <button id="morseListButton">対応表</button>
             </div>
             <script src="scripts/aichat.js"></script>
@@ -149,6 +149,15 @@
                 <h3><i class="fa-solid fa-headphones"></i> Playback Volume</h3>
                 <div class="volume-control">
                     <input type="range" id="volume-playback" name="volume-playback" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+            </div>
+            <div class="setting-item">
+                <h3><i class="fa-solid fa-ruler-horizontal"></i> Morse Guide</h3>
+                <div class="toggle-switch-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="morse-guide-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
             <!-- 設定項目をここに追加 -->

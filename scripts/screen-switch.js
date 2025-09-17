@@ -68,3 +68,24 @@ typingVolumeSlider.addEventListener('input', (event) => {
 playbackVolumeSlider.addEventListener('input', (event) => {
     window.playbackVolume = event.target.value;
 });
+
+// --- Morse Guide Toggle Logic --- //
+
+const morseGuideToggle = document.getElementById('morse-guide-toggle');
+
+// Set initial state from the checkbox's default
+if (typeof window.isMorseGuideActive !== 'undefined') {
+    window.isMorseGuideActive = morseGuideToggle.checked;
+}
+
+morseGuideToggle.addEventListener('change', (event) => {
+    if (typeof window.isMorseGuideActive !== 'undefined') {
+        window.isMorseGuideActive = event.target.checked;
+        // If the practice screen is active, restart it to apply the change
+        if (!practiceToggleElement.classList.contains('is-hidden')) {
+            if (typeof window.restartMorsePractice === 'function') {
+                window.restartMorsePractice();
+            }
+        }
+    }
+});

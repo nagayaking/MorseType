@@ -86,10 +86,7 @@ input[type="range"]:active::-webkit-slider-thumb {
   box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
 }
 
-.morse-wrapper button{
-	width: 200px;
-	height: 50px;
-}
+
 
 #textJapanese {
 	font-size: 40px;
@@ -304,7 +301,7 @@ main {
     margin: 0;
 }
 
-#send-btn {
+.morse-button {
     padding: 12px 20px;
     background-color: #53aeff;
     border: 1px solid #53aeff;
@@ -315,7 +312,7 @@ main {
     transition: background-color 0.3s ease;
 }
 
-#send-btn:hover {
+.morse-button:hover {
     background-color: #8acdff;
     border-color: #8acdff;
 }
@@ -537,4 +534,56 @@ main {
 
 .morse-table-columns li {
     padding: 2px 10px;
+}
+
+/* Toggle Switch Styles */
+.toggle-switch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #555;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #53aeff;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
 }
