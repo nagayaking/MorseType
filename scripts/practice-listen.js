@@ -46,4 +46,49 @@ const firstChoice = document.getElementById("choice1");
 const secondChoice = document.getElementById("choice2");
 const thirdChoice = document.getElementById("choice3");
 const fourthChoice = document.getElementById("choice4");
+let questionNumber = 0;
+const choiceArray = [firstChoice, secondChoice, thirdChoice, fourthChoice];
 
+let listenShuffledExample = shuffleArray(listeningExample);
+
+//リセットが必要なもの
+let questionAnswer = listenShuffledExample[questionNumber]
+let choices = selectChoices(listenShuffledExample, questionAnswer);
+let answerNumber = choices.indexOf(questionAnswer);
+
+function selectChoices(array, answer) {
+  // 修正点1: 配列の中身を比較してフィルタリングする
+  // n[0]とanswer[0]、かつ、n[1]とanswer[1]が一致するものを除外する
+  const otherElements = array.filter(n => n[0] !== answer[0] || n[1] !== answer[1]);
+  // 1. `answer` 以外の要素をシャッフルし、先頭から3つを取得します。
+  const selectedElements = shuffleArray(otherElements).slice(0, 3);
+
+  // 2. 取得した3つの要素に `answer` を加えた4つの要素の配列を作成します。
+  const finalArray = [...selectedElements, answer];
+
+  // 3. 最後に、4つの要素が含まれた配列全体をシャッフルして返します。
+  return shuffleArray(finalArray);
+}
+
+//画面に選択肢を表示
+function screenShift(array) {
+  for(let i = 0; i < 4; i ++){
+    choiceArray[i].textContent = array[i][0];
+  }
+}
+
+function listenReset() {
+  choices = selectChoices(listenShuffledExample, questionAnswer);
+  answerNumber = choices.indexOf(questionAnswer);
+}
+console.log(choiceArray[answerNumber])
+
+screenShift(choices);
+
+//正解のとき
+choiceArray[answerNumber].addEventListener("click", () => {
+  questionAnswer ++;
+  listenReset();
+  screenShift();
+  console.log("kkakakak")
+})
