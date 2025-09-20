@@ -36,7 +36,7 @@
     </header>
     <div id="overlay" class="overlay"></div>
     <main>
-        <div id="practiceToggleElement" class="page-content is-hidden">
+        <div id="practiceToggleElement" class="page-content">
             <div class="morse-wrapper">
                 <button id="listeningPracticeButton" class="icon">
                     <span title="Listening Practice">
@@ -132,14 +132,13 @@
             <script src="scripts/aichat.js"></script>
             </div>
         </div>
-        <div id="listeningPracticeElement" class="page-content">
+        <div id="listeningPracticeElement" class="page-content is-hidden">
             <div class="container listening-practice-container">
                 <button id="backToPracticeButton" class="icon">
                     <span title="Back to Practice">
                         <i class="fa-solid fa-arrow-left" style="color: #ffffff;"></i>
                     </span>
                 </button>
-                <h2>リスニング練習</h2>
                 <!-- ここにリスニング練習のコンテンツを追加します -->
                 <div class="questions">
                     <div class="questions-container">
@@ -148,6 +147,7 @@
                         <button class="choice" id="choice2">選択肢２</button>
                         <button class="choice" id="choice3">選択肢３</button>
                         <button class="choice" id="choice4">選択肢４</button>
+                        <div id="feedback-overlay" class="feedback-overlay"></div>
                     </div>
                     <div class="conversion-wrapper">
                         <div class="container">
