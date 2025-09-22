@@ -1,50 +1,117 @@
-// screen-switch.js の全体をこちらに書き換えます
-
+// DOM要素の取得
+const header = document.querySelector('header');
 const practiceToggleButton = document.getElementById("practiceToggleButton");
-const practiceToggleElement = document.getElementById("practiceToggleElement");
-
 const aiChatToggleButton = document.getElementById("aiChatToggleButton");
-const aiChatToggleElement = document.getElementById("aiChatToggleElement");
-
+const settingsToggleButton = document.getElementById("settingsToggleButton");
 const listeningPracticeButton = document.getElementById("listeningPracticeButton");
-const listeningPracticeElement = document.getElementById("listeningPracticeElement");
 const backToPracticeButton = document.getElementById("backToPracticeButton");
 
-const settingsToggleButton = document.getElementById("settingsToggleButton");
+const startScreen = document.getElementById('start-screen');
+const modeSelectionScreen = document.getElementById('mode-selection-screen');
+const practiceToggleElement = document.getElementById("practiceToggleElement");
+const aiChatToggleElement = document.getElementById("aiChatToggleElement");
+const listeningPracticeElement = document.getElementById("listeningPracticeElement");
 const settingsScreen = document.getElementById("settings-screen");
+
+const startPracticeButton = document.getElementById('startPracticeButton');
+const startListeningButton = document.getElementById('startListeningButton');
+const startAiChatButton = document.getElementById('startAiChatButton');
+const headerLeft = document.querySelector('.header-left');
+
+const startPracticeGameButton = document.getElementById('startPracticeGameButton');
+const backToStartScreenFromMode = document.getElementById('backToStartScreenFromMode');
+const backToModeSelection = document.getElementById('backToModeSelection');
+
 const closeBtn = document.querySelector('.close-btn');
 const overlay = document.getElementById('overlay');
 
-// 「練習」ボタンがクリックされたときの処理
-practiceToggleButton.addEventListener('click', () => {
-    practiceToggleElement.classList.remove('is-hidden');
+// 全てのページコンテンツを非表示にする関数
+function hideAllPages() {
+    startScreen.classList.add('is-hidden');
+    modeSelectionScreen.classList.add('is-hidden');
+    practiceToggleElement.classList.add('is-hidden');
     aiChatToggleElement.classList.add('is-hidden');
     listeningPracticeElement.classList.add('is-hidden');
+}
+
+// スタート画面を表示する関数
+function showStartScreen() {
+    hideAllPages();
+    startScreen.classList.remove('is-hidden');
+    header.classList.add('header-hidden');
+}
+
+// モード選択画面を表示する関数
+function showModeSelectionScreen() {
+    hideAllPages();
+    modeSelectionScreen.classList.remove('is-hidden');
+    header.classList.add('header-hidden');
+}
+
+// タイピング練習画面を表示する関数
+function showTypingPracticeScreen() {
+    hideAllPages();
+    practiceToggleElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
     if (typeof window.restartMorsePractice === 'function') {
         window.restartMorsePractice();
     }
-});
+}
 
-// 「AIチャット」ボタンがクリックされたときの処理
-aiChatToggleButton.addEventListener( "click", () => {
-    aiChatToggleElement.classList.remove('is-hidden');
-    practiceToggleElement.classList.add('is-hidden');
-    listeningPracticeElement.classList.add('is-hidden');
-});
+// --- イベントリスナーの設定 ---
 
-// 「リスニング練習」ボタンがクリックされたときの処理
-listeningPracticeButton.addEventListener('click', () => {
+// スタート画面の「タイピング練習」ボタン -> モード選択画面へ
+startPracticeButton.addEventListener('click', showModeSelectionScreen);
+
+// モード選択画面の「スタート」ボタン -> タイピング練習画面へ
+startPracticeGameButton.addEventListener('click', showTypingPracticeScreen);
+
+// タイピング練習画面 -> モード選択画面へ戻る
+backToModeSelection.addEventListener('click', showModeSelectionScreen);
+
+// モード選択画面 -> スタート画面へ戻る
+backToStartScreenFromMode.addEventListener('click', showStartScreen);
+
+// スタート画面の「リスニング練習」ボタン
+startListeningButton.addEventListener('click', () => {
+    hideAllPages();
     listeningPracticeElement.classList.remove('is-hidden');
-    practiceToggleElement.classList.add('is-hidden');
-    aiChatToggleElement.classList.add('is-hidden');
+    header.classList.remove('header-hidden');
 });
 
-// 「練習に戻る」ボタンがクリックされたときの処理
-backToPracticeButton.addEventListener('click', () => {
-    practiceToggleElement.classList.remove('is-hidden');
-    listeningPracticeElement.classList.add('is-hidden');
-    aiChatToggleElement.classList.add('is-hidden');
+// スタート画面の「AIチャット」ボタン
+startAiChatButton.addEventListener('click', () => {
+    hideAllPages();
+    aiChatToggleElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
 });
+
+// ヘッダーの「練習」ボタン -> モード選択画面へ
+practiceToggleButton.addEventListener('click', showModeSelectionScreen);
+
+// ヘッダーの「AIチャット」ボタン
+aiChatToggleButton.addEventListener('click', () => {
+    hideAllPages();
+    aiChatToggleElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
+});
+
+// 「リスニング練習」ボタン (練習画面内)
+listeningPracticeButton.addEventListener('click', () => {
+    hideAllPages();
+    listeningPracticeElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
+});
+
+// 「練習に戻る」ボタン (リスニング画面内)
+backToPracticeButton.addEventListener('click', () => {
+    hideAllPages();
+    practiceToggleElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
+});
+
+// ヘッダーのロゴクリックでスタート画面に戻る
+headerLeft.addEventListener('click', showStartScreen);
 
 
 // --- Settings Screen Logic --- //
@@ -59,16 +126,10 @@ function closeSettings() {
     overlay.classList.remove('is-active');
 }
 
-// Open settings with the gear icon
 settingsToggleButton.addEventListener('click', openSettings);
-
-// Close settings with the 'X' button
 closeBtn.addEventListener('click', closeSettings);
-
-// Close settings by clicking on the overlay
 overlay.addEventListener('click', closeSettings);
 
-// Prevent clicks inside the settings screen from closing it
 settingsScreen.addEventListener('click', (event) => {
     event.stopPropagation();
 });
@@ -78,35 +139,40 @@ settingsScreen.addEventListener('click', (event) => {
 const typingVolumeSlider = document.getElementById('volume-typing');
 const playbackVolumeSlider = document.getElementById('volume-playback');
 
-// Set initial volumes and make them globally accessible
-window.typingVolume = typingVolumeSlider.value;
-window.playbackVolume = playbackVolumeSlider.value;
+if (typingVolumeSlider) {
+    window.typingVolume = typingVolumeSlider.value;
+    typingVolumeSlider.addEventListener('input', (event) => {
+        window.typingVolume = event.target.value;
+    });
+}
 
-typingVolumeSlider.addEventListener('input', (event) => {
-    window.typingVolume = event.target.value;
-});
-
-playbackVolumeSlider.addEventListener('input', (event) => {
-    window.playbackVolume = event.target.value;
-});
+if (playbackVolumeSlider) {
+    window.playbackVolume = playbackVolumeSlider.value;
+    playbackVolumeSlider.addEventListener('input', (event) => {
+        window.playbackVolume = event.target.value;
+    });
+}
 
 // --- Morse Guide Toggle Logic --- //
 
 const morseGuideToggle = document.getElementById('morse-guide-toggle');
 
-// Set initial state from the checkbox's default
-if (typeof window.isMorseGuideActive !== 'undefined') {
-    window.isMorseGuideActive = morseGuideToggle.checked;
-}
-
-morseGuideToggle.addEventListener('change', (event) => {
+if (morseGuideToggle) {
     if (typeof window.isMorseGuideActive !== 'undefined') {
-        window.isMorseGuideActive = event.target.checked;
-        // If the practice screen is active, restart it to apply the change
-        if (!practiceToggleElement.classList.contains('is-hidden')) {
-            if (typeof window.restartMorsePractice === 'function') {
-                window.restartMorsePractice();
+        window.isMorseGuideActive = morseGuideToggle.checked;
+    }
+
+    morseGuideToggle.addEventListener('change', (event) => {
+        if (typeof window.isMorseGuideActive !== 'undefined') {
+            window.isMorseGuideActive = event.target.checked;
+            if (!practiceToggleElement.classList.contains('is-hidden')) {
+                if (typeof window.restartMorsePractice === 'function') {
+                    window.restartMorsePractice();
+                }
             }
         }
-    }
-});
+    });
+}
+
+// 初期状態でスタート画面を表示
+document.addEventListener('DOMContentLoaded', showStartScreen);

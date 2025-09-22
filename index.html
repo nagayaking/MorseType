@@ -36,8 +36,40 @@
     </header>
     <div id="overlay" class="overlay"></div>
     <main>
-        <div id="practiceToggleElement" class="page-content">
+        <div id="start-screen" class="page-content">
+            <div class="start-container">
+                <h2>MorseType</h2>
+                <p>モールス信号を学んで、AIとチャットしてみよう</p>
+                <div class="start-buttons">
+                    <button id="startPracticeButton" class="start-btn">タイピング練習</button>
+                    <button id="startListeningButton" class="start-btn">リスニング練習</button>
+                    <button id="startAiChatButton" class="start-btn">AIチャット</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mode-selection-screen" class="page-content is-hidden">
+            <div class="start-container">
+                <h2>タイピング練習モード</h2>
+                <p>挑戦したいモードを選択してください</p>
+                <div class="mode-switch">
+                    <input type="radio" id="timeAttackRadio" name="mode-select" class="mode-radio" checked>
+                    <label for="timeAttackRadio" class="mode-label">タイムアタック</label>
+                    <input type="radio" id="scoreAttackRadio" name="mode-select" class="mode-radio">
+                    <label for="scoreAttackRadio" class="mode-label">スコアアタック</label>
+                </div>
+                <button id="startPracticeGameButton" class="start-btn" style="margin-top: 30px;">スタート</button>
+                <button id="backToStartScreenFromMode" class="back-button">スタートに戻る</button>
+            </div>
+        </div>
+
+        <div id="practiceToggleElement" class="page-content is-hidden">
             <div class="morse-wrapper">
+                <button id="backToModeSelection" class="icon back-button-ingame">
+                    <span title="Back to Mode Selection">
+                        <i class="fa-solid fa-arrow-left" style="color: #ffffff;"></i>
+                    </span>
+                </button>
                 <button id="listeningPracticeButton" class="icon">
                     <span title="Listening Practice">
                         <i class="fa-solid fa-headphones" style="color: #ffffff;"></i>
