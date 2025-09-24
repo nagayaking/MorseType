@@ -10,22 +10,12 @@
 </head>
 
 <body>
-    <header>
+    <header class="header-hidden">
         <div class="container">
             <a class="header-left">
                 <h1>MorseType</h1>
             </a>
             <div class="header-right">
-                <button id="practiceToggleButton" class="icon">
-                    <span title="Practice">
-                        <i class="fa-solid fa-computer-mouse" style="color: #ffffff;"></i>
-                    </span>
-                </button>
-                <button id="aiChatToggleButton" class="icon"\>
-                    <span title="AI-chat">
-                        <p class="icon-logo">AI</p>
-                    </span>
-                </button>
                 <button id="settingsToggleButton" class="icon">
                     <span title="Settings">
                         <i class="fa-solid fa-gear" style="color: #ffffff;"></i>
@@ -58,6 +48,27 @@
                     <input type="radio" id="scoreAttackRadio" name="mode-select" class="mode-radio">
                     <label for="scoreAttackRadio" class="mode-label">スコアアタック</label>
                 </div>
+
+                <div class="mode-option-item">
+                    <label for="morse-visible-toggle" class="mode-option-label">モールス信号表示</label>
+                    <div class="toggle-switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="morse-visible-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mode-option-item">
+                    <label for="morse-guide-toggle" class="mode-option-label">モールスガイド</label>
+                    <div class="toggle-switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="morse-guide-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
                 <button id="startPracticeGameButton" class="start-btn" style="margin-top: 30px;">スタート</button>
                 <button id="backToStartScreenFromMode" class="back-button">スタートに戻る</button>
             </div>
@@ -65,21 +76,21 @@
 
         <div id="practiceToggleElement" class="page-content is-hidden">
             <div class="morse-wrapper">
-                <button id="backToModeSelection" class="icon back-button-ingame">
-                    <span title="Back to Mode Selection">
-                        <i class="fa-solid fa-arrow-left" style="color: #ffffff;"></i>
-                    </span>
-                </button>
-                <button id="listeningPracticeButton" class="icon">
-                    <span title="Listening Practice">
-                        <i class="fa-solid fa-headphones" style="color: #ffffff;"></i>
-                    </span>
-                </button>
                 <div class="container">
+                    <div id="game-stats" class="is-hidden">
+                        <div class="game-stat-item">
+                            <span id="game-stat-label"></span>
+                            <span id="game-stat-value"></span>
+                        </div>
+                        <div class="game-stat-item">
+                            <span>スコア:</span>
+                            <span id="score">0</span>
+                        </div>
+                    </div>
                     <p id ="textJapanese"></p>
                     <p id = "textHurigana" class="text"></p>
                     <p id ="morseJapanese" class="text"></p>
-                    <button class="morse-button" onmousedown="mousedown()" onmouseup="mouseup()" >クリック</button><br>
+                    <button class="morse-button" onmousedown="mousedown()" onmouseup="mouseup()" onmouseout="mouseLeave()" oncontextmenu="mouseLeave(); return false;">クリック</button><br>
                     <script src="scripts/practice-type.js"></script>
                 </div>
             </div>
@@ -158,7 +169,7 @@
                 <div id="userInput">
                     <p id="aitext"></p>
                 </div>
-                <button id="send-btn" class="morse-button" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()">クリック</button>
+                <button id="send-btn" class="morse-button" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()" oncontextmenu="event.preventDefault()">クリック</button>
                 <button id="morseListButton">対応表</button>
             </div>
             <script src="scripts/aichat.js"></script>
@@ -252,6 +263,41 @@
                 <div id="morse-table-container"></div>
             </div>
         </div>
+        <div id="result-modal" class="modal is-hidden">
+            <div class="modal-content result-modal-content">
+                <h2 class="result-title">タイムアップ！</h2>
+                <div class="final-score-container">
+                    <p class="final-score-label">最終スコア</p>
+                    <p id="final-score" class="final-score-value">0</p>
+                </div>
+                <div class="result-stats">
+                    <div class="stat-card">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <p class="stat-label">正答率</p>
+                        <p id="accuracy-stat" class="stat-value">0%</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-xmark"></i>
+                        <p class="stat-label">ミス数</p>
+                        <p id="mistakes-stat" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-keyboard"></i>
+                        <p class="stat-label">入力文字数</p>
+                        <p id="chars-typed-stat" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-stopwatch"></i>
+                        <p id="wpm-stat-label" class="stat-label">WPM</p>
+                        <p id="wpm-stat" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="result-buttons">
+                    <button id="retry-button" class="start-btn">もう一度挑戦</button>
+                    <button id="backToModeSelectionFromResult" class="start-btn">モード選択に戻る</button>
+                </div>
+            </div>
+        </div>
     </main>
     <div id="settings-screen" class="settings-screen">
         <div class="settings-container">
@@ -269,15 +315,7 @@
                     <input type="range" id="volume-playback" name="volume-playback" min="0" max="1" step="0.05" value="0.5" />
                 </div>
             </div>
-            <div class="setting-item">
-                <h3><i class="fa-solid fa-ruler-horizontal"></i> Morse Guide</h3>
-                <div class="toggle-switch-container">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="morse-guide-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
+
             <!-- 設定項目をここに追加 -->
         </div>
     </div>

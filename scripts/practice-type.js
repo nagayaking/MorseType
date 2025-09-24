@@ -7,15 +7,36 @@ let words=[];
 let num = 0;
 var morseGain = 0.5;
 
+// --- Game Mode Variables ---
+let timerInterval;
+let elapsedTimerInterval; // Timer for elapsed time in Time Attack
+let score = 0;
+let baseScorePerChar = 100;
+let flawlessBonus = 0;
+let mistakeMadeInChar = false;
+let totalCharsTyped = 0;
+let correctCharsTyped = 0;
+let mistakeCount = 0;
+const timeLimit = 60; // 60 seconds
+let timeLeft = timeLimit;
+let isGameActive = false;
+const scoreAttackSentenceLimit = 5;
+let sentenceCount = 0;
+let sessionStartTime = 0;
+
 // This will be controlled by the settings toggle
 window.isMorseGuideActive = true;
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// --- DOM Element Variables ---
+let textJapaneseElement, textHuriganaElement, morseJapaneseElement, morseButton;
+let gameStats, scoreElement;
+let resultModal, finalScoreElement, retryButton, backToModeSelectionFromResult;
+let accuracyStatElement, charsTypedStatElement, wpmStatElement, mistakesStatElement;
+
+let audioCtx;
 
 let oscillator = null;
 let gainNode = null;
-
-const button = document.getElementById('soundButton');
 
 const morse_list_guide = {
   "ーー・ーー|":"あ","・ー|":"い","・・ー|":"う","ー・ーーー|":"え","・ー・・・|":"お",
@@ -59,7 +80,7 @@ const morse_list_no_guide = {
   "ー・ー・ー":"さ","ーー・ー・":"し","ーーー・ー":"す","・ーーー・":"せ","ーーー・":"そ",
   "ー・":"た","・・ー・":"ち","・ーー・":"つ","・ー・ーー":"て","・・ー・・":"と",
   "・ー・":"な","ー・ー・":"に","・・・・":"ぬ","ーー・ー":"ね","・・ーー":"の",
-  "ー・・・":"は","ーー・・ー":"ひ","ーー・・":"ふ","・":"へ","ー・・":"ほ",
+  "ー・・・":"は","ーー・・ー":"ひ","ーー・・":"ふ","・":"へ","ー・・|":"ほ",
   "ー・・ー":"ま","・・ー・ー":"み","ー":"む","ー・・・ー":"め","ー・・ー・":"も",
   "・ーー":"や","ー・・ーー":"ゆ","ーー":"よ",
   "・・・":"ら","ーー・":"り","ー・ーー・":"る","ーーー":"れ","・ー・ー":"ろ",
@@ -164,24 +185,169 @@ const examples = [
   ["犬と一緒に走った","いぬといっしょにはしった"]
 ]
 
-
-
-
 const shuffleArray = (array) => {
   const cloneArray = [...array];
-
   for (let i = cloneArray.length - 1; i >= 0; i--) {
     let rand = Math.floor(Math.random() * (i + 1));
-    // 配列の要素の順番を入れ替える
     let tmpStorage = cloneArray[i];
     cloneArray[i] = cloneArray[rand];
     cloneArray[rand] = tmpStorage;
   }
-
   return cloneArray;
 }
 
 let shuffledExample = shuffleArray(examples);
+
+// --- Game Control Functions ---
+
+window.startPracticeGame = () => {
+    isGameActive = true;
+    morseButton.disabled = false;
+    resultModal.classList.add('is-hidden');
+
+    if (window.selectedPracticeMode === 'timeAttack') {
+        startScoreAttack(); // Corrected logic: Time Attack is sentence-based
+    } else {
+        startTimeAttack(); // Corrected logic: Score Attack is time-based
+    }
+};
+
+function startTimeAttack() { // This is now SCORE ATTACK
+    gameStats.classList.remove('is-hidden');
+    score = 0;
+    flawlessBonus = 0;
+    mistakeMadeInChar = false;
+    totalCharsTyped = 0;
+    correctCharsTyped = 0;
+    mistakeCount = 0;
+    timeLeft = timeLimit;
+    
+    scoreElement.textContent = score;
+    document.getElementById('game-stat-label').textContent = '残り時間:';
+    document.getElementById('game-stat-value').textContent = `${timeLeft}秒`;
+
+    clearInterval(timerInterval);
+    clearInterval(elapsedTimerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+
+    restartMorsePractice();
+}
+
+function startScoreAttack() { // This is now TIME ATTACK
+    gameStats.classList.remove('is-hidden');
+    score = 0;
+    flawlessBonus = 0;
+    mistakeMadeInChar = false;
+    totalCharsTyped = 0;
+    correctCharsTyped = 0;
+    mistakeCount = 0;
+    sentenceCount = 0;
+    
+    // In Time Attack, the right stat shows elapsed time, not score
+    scoreElement.previousElementSibling.textContent = '時間:';
+    scoreElement.textContent = '0.0秒';
+
+    document.getElementById('game-stat-label').textContent = '問題:';
+    document.getElementById('game-stat-value').innerHTML = `<span id="sentence-counter">${sentenceCount + 1}</span> / ${scoreAttackSentenceLimit}`;
+
+    sessionStartTime = performance.now();
+    
+    clearInterval(timerInterval);
+    clearInterval(elapsedTimerInterval);
+    elapsedTimerInterval = setInterval(updateElapsedTime, 100);
+
+    restartMorsePractice();
+}
+
+function updateTimer() { // For Score Attack (time limit)
+    timeLeft--;
+    document.getElementById('game-stat-value').textContent = `${timeLeft}秒`;
+    if (timeLeft <= 0) {
+        endGame();
+    }
+}
+
+function updateElapsedTime() { // For Time Attack (elapsed time)
+    if (!isGameActive) return;
+    const elapsedSeconds = (performance.now() - sessionStartTime) / 1000;
+    scoreElement.textContent = `${elapsedSeconds.toFixed(1)}秒`;
+}
+
+function endGame() {
+    isGameActive = false;
+    clearInterval(timerInterval);
+    clearInterval(elapsedTimerInterval);
+    clearTimeout(id);
+
+    if (oscillator) {
+        oscillator.stop();
+        oscillator = null;
+        gainNode = null;
+    }
+
+    morseButton.disabled = true;
+
+    // --- Common Stats Calculation ---
+    const accuracy = totalCharsTyped > 0 ? Math.round((correctCharsTyped / totalCharsTyped) * 100) : 0;
+    accuracyStatElement.textContent = `${accuracy}%`;
+    charsTypedStatElement.textContent = totalCharsTyped;
+    mistakesStatElement.textContent = mistakeCount;
+
+    const resultTitle = document.querySelector('.result-title');
+    const finalScoreLabel = document.querySelector('.final-score-label');
+    const wpmStatLabel = document.getElementById('wpm-stat-label');
+
+    if (window.selectedPracticeMode === 'timeAttack') {
+        resultTitle.textContent = '終了！';
+
+        const totalTimeSeconds = (performance.now() - sessionStartTime) / 1000;
+        const timeElapsedInMinutes = totalTimeSeconds / 60;
+        const wpm = timeElapsedInMinutes > 0 ? Math.round((totalCharsTyped / 5) / timeElapsedInMinutes) : 0;
+
+        finalScoreLabel.textContent = 'クリア時間';
+        finalScoreElement.textContent = `${totalTimeSeconds.toFixed(2)}秒`;
+
+        wpmStatLabel.textContent = 'WPM';
+        wpmStatElement.textContent = wpm;
+
+    } else { // scoreAttack
+        resultTitle.textContent = 'タイムアップ！';
+        finalScoreLabel.textContent = '最終スコア';
+        
+        const timeElapsedInMinutes = timeLimit / 60;
+        const wpm = timeElapsedInMinutes > 0 ? Math.round((totalCharsTyped / 5) / timeElapsedInMinutes) : 0;
+        wpmStatLabel.textContent = 'WPM';
+        wpmStatElement.textContent = wpm;
+
+        // Animate score
+        let currentScore = 0;
+        const finalScoreValue = score;
+        finalScoreElement.textContent = 0;
+
+        if (finalScoreValue === 0) {
+            finalScoreElement.textContent = '0';
+        } else {
+            const duration = 1000; // ms
+            const stepTime = 10; // ms
+            const totalSteps = duration / stepTime;
+            const increment = finalScoreValue / totalSteps;
+
+            const scoreAnimation = setInterval(() => {
+                currentScore += increment;
+                if (currentScore >= finalScoreValue) {
+                    currentScore = finalScoreValue;
+                    clearInterval(scoreAnimation);
+                }
+                finalScoreElement.textContent = Math.round(currentScore);
+            }, stepTime);
+        }
+    }
+    
+    resultModal.classList.remove('is-hidden');
+}
+
+
+// --- Core Practice Logic ---
 
 const reset = () => {
   if (window.isMorseGuideActive) {
@@ -192,13 +358,18 @@ const reset = () => {
     morsecodeMap = morsecodeMap_no_guide;
   }
 
+  if (num >= shuffledExample.length) {
+      num = 0; // Loop back to the start if all words are used
+      shuffledExample = shuffleArray(examples);
+  }
+
   wordsBase = ["", replaceWithMap(shuffledExample[num][1], conversionMap)];
   morseBase = ["", replaceWithMap(wordsBase[1], morsecodeMap)];
-  document.getElementById("textJapanese").innerHTML = shuffledExample[num][0];
-  document.getElementById("textHurigana").innerHTML = `<span></span>${replaceWithMap(shuffledExample[num][1], conversionMap)}`;
+  textJapaneseElement.innerHTML = shuffledExample[num][0];
+  textHuriganaElement.innerHTML = `<span></span>${replaceWithMap(shuffledExample[num][1], conversionMap)}`;
   const morseText = replaceWithMap(wordsBase[1], morsecodeMap);
   const displayText = window.isMorseGuideActive ? morseText.replace(/\|/g, '　') : morseText;
-  document.getElementById("morseJapanese").innerHTML = `<span></span>${displayText}`;
+  morseJapaneseElement.innerHTML = `<span></span>${displayText}`;
   num ++;
 }
 
@@ -207,16 +378,9 @@ const deleteFirst = (text) => {
 }
 
 function replaceWithMap(input, map) {
-  // すべてのキーを正規表現のORでまとめてパターン作成
   const pattern = new RegExp(Object.keys(map).join('|'), 'g');
-  // 一致した部分だけを map に従って置換
   return input.replace(pattern, match => map[match]);
 }
-
-const mapString = (str, base) => 
-  str.split("").map((a) => {
-    return base[a]
-  }).join("");
 
 const judgeMorse = (word, list) => {
   let correctWords = "";
@@ -226,13 +390,15 @@ const judgeMorse = (word, list) => {
     newWords = deleteFirst(list[1]);
     return [correctWords,newWords];
   }else{
-    return list;//間違えた時の処理１
+    return list;
   }
 }
 
 const colorChange = (text, file) => {
   const colors = ["color-white", "color-gray"];
   let newText = "";
+  const targetElement = file === "morseJapanese" ? morseJapaneseElement : textHuriganaElement;
+
   if (file === "morseJapanese") {
     const part1 = window.isMorseGuideActive ? text[0].replace(/\|/g, '　') : text[0];
     const part2 = window.isMorseGuideActive ? text[1].replace(/\|/g, '　') : text[1];
@@ -240,66 +406,120 @@ const colorChange = (text, file) => {
   } else {
     newText = `<span class="${colors[0]}">${text[0]}</span>${text[1]}`;
   }
-  document.getElementById(file).innerHTML = newText;
+  targetElement.innerHTML = newText;
 };
 
-//モールスを日本語に変換
 const cnv = () => {
   let morse = window.isMorseGuideActive ? words + '|' : words;
   if(morse_list[morse]!==NaN && morse_list[morse]!==undefined){
-    word += morse_list[morse];
-    wordsBase = judgeMorse(word,wordsBase);
+    totalCharsTyped++;
+    const typedChar = morse_list[morse];
+    const expectedChar = wordsBase[1] ? wordsBase[1][0] : null;
+    const isCorrect = !mistakeMadeInChar && typedChar === expectedChar;
+
+    if (isGameActive) {
+        if (isCorrect) {
+            correctCharsTyped++;
+            score += baseScorePerChar + flawlessBonus;
+            flawlessBonus++;
+        } else {
+            flawlessBonus = 0;
+            mistakeCount++;
+        }
+        // Only update score display in score attack mode
+        if (window.selectedPracticeMode === 'scoreAttack') {
+            scoreElement.textContent = score;
+        }
+    }
+
+    if (isCorrect) {
+        word += typedChar;
+        wordsBase = judgeMorse(word, wordsBase);
+    }
+    
+    mistakeMadeInChar = false; // Reset for next attempt
+
     morseBase = [replaceWithMap(wordsBase[0], morsecodeMap), replaceWithMap(wordsBase[1], morsecodeMap)];
     colorChange(wordsBase, "textHurigana");
     colorChange(morseBase, "morseJapanese");
   }else{
+    if (words !== "") {
+        flawlessBonus = 0;
+        mistakeMadeInChar = true;
+        mistakeCount++;
+    }
     morseBase = [replaceWithMap(wordsBase[0], morsecodeMap), replaceWithMap(wordsBase[1], morsecodeMap)];
     colorChange(morseBase, "morseJapanese");
   }
   if(wordsBase[1] === ""){
-    reset();
+    if (isGameActive) {
+        score += 500; // Add bonus for completing a sentence
+        if (window.selectedPracticeMode === 'scoreAttack') {
+            scoreElement.textContent = score;
+        }
+    }
+    
+    if (window.selectedPracticeMode === 'timeAttack') {
+        sentenceCount++;
+        if (sentenceCount >= scoreAttackSentenceLimit) {
+            endGame();
+        } else {
+            document.getElementById('game-stat-value').innerHTML = `<span id="sentence-counter">${sentenceCount + 1}</span> / ${scoreAttackSentenceLimit}`;
+            reset();
+        }
+    } else {
+        reset();
+    }
   }
   word = "";
   words = "";
 }
 
-//入力をモールス信号に変換
 function mousedown() {
+  if (!isGameActive) return;
+
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
   let start1 = performance.now();
   ddtime = start1;
 
-    // オシレーターとゲインノードを作成
+  if (oscillator) {
+    oscillator.stop();
+  }
+
   oscillator = audioCtx.createOscillator();
   gainNode = audioCtx.createGain();
-
-  // ラの音（A4: 440Hz）
   oscillator.frequency.value = 880;
   oscillator.type = 'sine';
-
-  // ノードを接続
   oscillator.connect(gainNode);
   gainNode.connect(audioCtx.destination);
-
-  // 音量を設定
   gainNode.gain.setValueAtTime(window.typingVolume, audioCtx.currentTime);
-
-  // 再生開始
   oscillator.start();
 
   clearTimeout(id);
 }
 
 function mouseup() {
+  if (!isGameActive) return;
   let mo;
   let end1 = performance.now();
   let result = end1 - ddtime;
   if(result<=interval){
-      mo = "・"; //ドット
+      mo = "・";
   }else{
-      mo = "ー"; //バー
+      mo = "ー";
   }
 
+  const originalCorrectLength = morseBase[0].length;
   morseBase = judgeMorse(mo, morseBase);
+  if (morseBase[0].length === originalCorrectLength && mo !== "") {
+    mistakeMadeInChar = true;
+  }
   colorChange(morseBase, "morseJapanese");
 
  if (oscillator) {
@@ -314,6 +534,7 @@ function mouseup() {
 }
 
 function mouseLeave() {
+  console.log("practice-type.js: mouseLeave called");
   if (oscillator) {
     oscillator.stop();
     oscillator = null;
@@ -322,57 +543,52 @@ function mouseLeave() {
   clearTimeout(id);
 }
 
-
-
-/**
- * ゲームの状態をリセットして最初から始めるための関数
- */
 function restartMorsePractice() {
-  // 問題番号を0に戻す
   num = 0;
-  // 入力途中の文字を空にする
   word = "";
   words = "";
-  // 実行待機中のタイマーがあれば解除する
   if (id) {
     clearTimeout(id);
   }
-  // 問題リストを再度シャッフルする
   shuffledExample = shuffleArray(examples);
-  // 最初の問題を表示する
   reset();
 }
-
-// 作成した関数を、他のJavaScriptファイルから呼び出せるようにする
 window.restartMorsePractice = restartMorsePractice;
 
-function playClickSound() {
-  // Use the existing AudioContext if available, otherwise create a new one.
-  const audioContext = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-  if (!window.audioCtx) {
-    window.audioCtx = audioContext;
-  }
 
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
+document.addEventListener("DOMContentLoaded", () => {
+    // --- DOM Element Initialization ---
+    textJapaneseElement = document.getElementById("textJapanese");
+    textHuriganaElement = document.getElementById("textHurigana");
+    morseJapaneseElement = document.getElementById("morseJapanese");
+    morseButton = document.querySelector(".morse-button");
+    gameStats = document.getElementById('game-stats');
+    scoreElement = document.getElementById('score');
+    resultModal = document.getElementById('result-modal');
+    finalScoreElement = document.getElementById('final-score');
+    retryButton = document.getElementById('retry-button');
+    backToModeSelectionFromResult = document.getElementById('backToModeSelectionFromResult');
 
-  oscillator.frequency.value = 880; // A tone like the morse sound
-  oscillator.type = 'sine';
+    accuracyStatElement = document.getElementById('accuracy-stat');
+    charsTypedStatElement = document.getElementById('chars-typed-stat');
+    wpmStatElement = document.getElementById('wpm-stat');
+    mistakesStatElement = document.getElementById('mistakes-stat');
 
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
+    // --- Event Listeners for Modal ---
+    retryButton.addEventListener('click', () => {
+        resultModal.classList.add('is-hidden');
+        startPracticeGame(); // Re-call the main start function
+    });
 
-  // Use the global typingVolume value, defaulting if not available.
-  const clickVolume = typeof window.typingVolume !== 'undefined' ? window.typingVolume : 0.5;
-  gainNode.gain.setValueAtTime(clickVolume, audioContext.currentTime);
+    backToModeSelectionFromResult.addEventListener('click', () => {
+        resultModal.classList.add('is-hidden');
+        if(typeof showModeSelectionScreen === 'function') {
+            showModeSelectionScreen();
+        }
+    });
 
-  // Play a very short sound
-  oscillator.start(audioContext.currentTime);
-  oscillator.stop(audioContext.currentTime + 0.07); // 70ms duration
-}
-
-// Expose the function to be used in other scripts
-window.playClickSound = playClickSound;
-
-// Initialize the practice mode when the DOM is loaded
-document.addEventListener("DOMContentLoaded", reset);
+    // --- Initial Page Setup ---
+    restartMorsePractice(); 
+    gameStats.classList.add('is-hidden');
+    morseButton.disabled = true; // Initially disabled
+});

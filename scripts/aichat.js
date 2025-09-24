@@ -147,6 +147,9 @@ function aiMouseDown() {
   if (!aiAudioCtx) {
     aiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
+  if (aiAudioCtx.state === 'suspended') {
+    aiAudioCtx.resume();
+  }
   
   // Stop any previous sound
   if (aiOscillator) {

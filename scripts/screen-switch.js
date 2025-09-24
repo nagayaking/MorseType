@@ -1,9 +1,6 @@
 // DOM要素の取得
 const header = document.querySelector('header');
-const practiceToggleButton = document.getElementById("practiceToggleButton");
-const aiChatToggleButton = document.getElementById("aiChatToggleButton");
 const settingsToggleButton = document.getElementById("settingsToggleButton");
-const listeningPracticeButton = document.getElementById("listeningPracticeButton");
 const backToPracticeButton = document.getElementById("backToPracticeButton");
 
 const startScreen = document.getElementById('start-screen');
@@ -18,9 +15,9 @@ const startListeningButton = document.getElementById('startListeningButton');
 const startAiChatButton = document.getElementById('startAiChatButton');
 const headerLeft = document.querySelector('.header-left');
 
+const timeAttackRadio = document.getElementById('timeAttackRadio');
 const startPracticeGameButton = document.getElementById('startPracticeGameButton');
 const backToStartScreenFromMode = document.getElementById('backToStartScreenFromMode');
-const backToModeSelection = document.getElementById('backToModeSelection');
 
 const closeBtn = document.querySelector('.close-btn');
 const overlay = document.getElementById('overlay');
@@ -50,11 +47,16 @@ function showModeSelectionScreen() {
 
 // タイピング練習画面を表示する関数
 function showTypingPracticeScreen() {
+    // 選択されたモードをグローバル変数に保存
+    window.selectedPracticeMode = timeAttackRadio.checked ? 'timeAttack' : 'scoreAttack';
+
     hideAllPages();
     practiceToggleElement.classList.remove('is-hidden');
     header.classList.remove('header-hidden');
-    if (typeof window.restartMorsePractice === 'function') {
-        window.restartMorsePractice();
+    
+    // ゲーム開始の合図を送る
+    if (typeof window.startPracticeGame === 'function') {
+        window.startPracticeGame();
     }
 }
 
@@ -65,9 +67,6 @@ startPracticeButton.addEventListener('click', showModeSelectionScreen);
 
 // モード選択画面の「スタート」ボタン -> タイピング練習画面へ
 startPracticeGameButton.addEventListener('click', showTypingPracticeScreen);
-
-// タイピング練習画面 -> モード選択画面へ戻る
-backToModeSelection.addEventListener('click', showModeSelectionScreen);
 
 // モード選択画面 -> スタート画面へ戻る
 backToStartScreenFromMode.addEventListener('click', showStartScreen);
@@ -83,23 +82,6 @@ startListeningButton.addEventListener('click', () => {
 startAiChatButton.addEventListener('click', () => {
     hideAllPages();
     aiChatToggleElement.classList.remove('is-hidden');
-    header.classList.remove('header-hidden');
-});
-
-// ヘッダーの「練習」ボタン -> モード選択画面へ
-practiceToggleButton.addEventListener('click', showModeSelectionScreen);
-
-// ヘッダーの「AIチャット」ボタン
-aiChatToggleButton.addEventListener('click', () => {
-    hideAllPages();
-    aiChatToggleElement.classList.remove('is-hidden');
-    header.classList.remove('header-hidden');
-});
-
-// 「リスニング練習」ボタン (練習画面内)
-listeningPracticeButton.addEventListener('click', () => {
-    hideAllPages();
-    listeningPracticeElement.classList.remove('is-hidden');
     header.classList.remove('header-hidden');
 });
 
@@ -173,6 +155,44 @@ if (morseGuideToggle) {
         }
     });
 }
+
+// --- Morse Visible Toggle Logic --- //
+
+const morseVisibleToggle = document.getElementById('morse-visible-toggle');
+const morseJapaneseDisplay = document.getElementById('morseJapanese'); 
+const morseGuideOptionItem = morseGuideToggle.closest('.mode-option-item');
+
+if (morseVisibleToggle && morseJapaneseDisplay && morseGuideToggle && morseGuideOptionItem) {
+    // Function to set the disabled state of the guide toggle
+    const setGuideDisabledState = () => {
+        const isVisible = morseVisibleToggle.checked;
+        morseGuideToggle.disabled = !isVisible;
+        if (isVisible) {
+            morseGuideOptionItem.classList.remove('is-disabled');
+        } else {
+            morseGuideOptionItem.classList.add('is-disabled');
+        }
+    };
+
+    // Set initial state for visibility and disabled status
+    window.isMorseVisible = morseVisibleToggle.checked;
+    if (!window.isMorseVisible) {
+        morseJapaneseDisplay.classList.add('is-invisible');
+    }
+    setGuideDisabledState();
+
+    // Add listener for visibility toggle
+    morseVisibleToggle.addEventListener('change', (event) => {
+        window.isMorseVisible = event.target.checked;
+        if (window.isMorseVisible) {
+            morseJapaneseDisplay.classList.remove('is-invisible');
+        } else {
+            morseJapaneseDisplay.classList.add('is-invisible');
+        }
+        setGuideDisabledState();
+    });
+}
+
 
 // 初期状態でスタート画面を表示
 document.addEventListener('DOMContentLoaded', showStartScreen);
