@@ -27,6 +27,20 @@
     <div id="overlay" class="overlay"></div>
     <main>
         <div id="start-screen" class="page-content">
+            <div id="start-menu-container">
+                <button id="start-menu-toggle" class="icon">
+                    <span title="Menu">
+                        <i class="fa-solid fa-bars" style="color: #ffffff;"></i>
+                    </span>
+                </button>
+                <div id="start-menu-panel" class="is-hidden">
+                    <ul>
+                        <li><a href="#" id="how-to-play-link">遊び方</a></li>
+                        <li><a href="#" id="settings-menu-link">設定</a></li>
+                        <li><a href="https://github.com/nagayaking/MorseType" target="_blank">クレジット</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="start-container">
                 <h2>MorseType</h2>
                 <p>モールス信号を学んで、AIとチャットしてみよう</p>
@@ -177,11 +191,6 @@
         </div>
         <div id="listeningPracticeElement" class="page-content is-hidden">
             <div class="container listening-practice-container">
-                <button id="backToPracticeButton" class="icon">
-                    <span title="Back to Practice">
-                        <i class="fa-solid fa-arrow-left" style="color: #ffffff;"></i>
-                    </span>
-                </button>
                 <!-- ここにリスニング練習のコンテンツを追加します -->
                 <div class="questions">
                     <div class="questions-container">
@@ -313,6 +322,14 @@
                 <h3><i class="fa-solid fa-headphones"></i> Playback Volume</h3>
                 <div class="volume-control">
                     <input type="range" id="volume-playback" name="volume-playback" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <h3><i class="fa-solid fa-clock"></i> モールス信号の速度</h3>
+                <div class="duration-control">
+                    <input type="range" id="threshold-duration" name="threshold-duration" min="100" max="500" step="10" value="200" />
+                    <span id="threshold-value">200ms</span>
                 </div>
             </div>
 

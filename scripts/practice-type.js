@@ -1,6 +1,6 @@
 let ddtime=0;
 let blanktime=0;
-let interval = 200
+window.morseInterval = 200;
 let id;
 let word = "";
 let words=[];
@@ -509,7 +509,7 @@ function mouseup() {
   let mo;
   let end1 = performance.now();
   let result = end1 - ddtime;
-  if(result<=interval){
+  if(result<=window.morseInterval){
       mo = "・";
   }else{
       mo = "ー";
@@ -530,7 +530,7 @@ function mouseup() {
 
   words += mo;
   mo = "";
-  id = setTimeout(cnv, interval);
+  id = setTimeout(cnv, window.morseInterval);
 }
 
 function mouseLeave() {
@@ -591,4 +591,25 @@ document.addEventListener("DOMContentLoaded", () => {
     restartMorsePractice(); 
     gameStats.classList.add('is-hidden');
     morseButton.disabled = true; // Initially disabled
+
+    // --- Settings for Morse Threshold ---
+    const thresholdSlider = document.getElementById('threshold-duration');
+    const thresholdValueDisplay = document.getElementById('threshold-value');
+
+    // Load saved threshold from localStorage
+    const savedThreshold = localStorage.getItem('morseThreshold');
+    if (savedThreshold) {
+        const value = parseInt(savedThreshold, 10);
+        window.morseInterval = value;
+        thresholdSlider.value = value;
+        thresholdValueDisplay.textContent = `${value}ms`;
+    }
+
+    // Listen for changes on the slider
+    thresholdSlider.addEventListener('input', (e) => {
+        const value = parseInt(e.target.value, 10);
+        window.morseInterval = value;
+        thresholdValueDisplay.textContent = `${value}ms`;
+        localStorage.setItem('morseThreshold', value);
+    });
 });

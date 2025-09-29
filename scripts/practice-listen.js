@@ -239,7 +239,7 @@ async function playMorse(morseCode) {
 
   // isPlayingフラグがfalseになったら再生を中断するためのチェック
   const playExecution = async () => {
-    const dotDuration = 80;
+    const dotDuration = (window.morseInterval || 200) / 2.5;
     const dashDuration = dotDuration * 3;
     const symbolSpace = dotDuration;
     const letterSpace = dotDuration * 3;

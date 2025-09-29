@@ -1,7 +1,7 @@
 // DOM要素の取得
 const header = document.querySelector('header');
 const settingsToggleButton = document.getElementById("settingsToggleButton");
-const backToPracticeButton = document.getElementById("backToPracticeButton");
+
 
 const startScreen = document.getElementById('start-screen');
 const modeSelectionScreen = document.getElementById('mode-selection-screen');
@@ -85,12 +85,7 @@ startAiChatButton.addEventListener('click', () => {
     header.classList.remove('header-hidden');
 });
 
-// 「練習に戻る」ボタン (リスニング画面内)
-backToPracticeButton.addEventListener('click', () => {
-    hideAllPages();
-    practiceToggleElement.classList.remove('is-hidden');
-    header.classList.remove('header-hidden');
-});
+
 
 // ヘッダーのロゴクリックでスタート画面に戻る
 headerLeft.addEventListener('click', showStartScreen);
@@ -195,4 +190,34 @@ if (morseVisibleToggle && morseJapaneseDisplay && morseGuideToggle && morseGuide
 
 
 // 初期状態でスタート画面を表示
-document.addEventListener('DOMContentLoaded', showStartScreen);
+document.addEventListener('DOMContentLoaded', () => {
+    showStartScreen();
+
+    // --- Start Screen Menu Logic ---
+    const startMenuToggle = document.getElementById('start-menu-toggle');
+    const startMenuPanel = document.getElementById('start-menu-panel');
+    const settingsMenuLink = document.getElementById('settings-menu-link');
+
+    if (startMenuToggle && startMenuPanel) {
+        startMenuToggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+            startMenuPanel.classList.toggle('is-hidden');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!startMenuPanel.classList.contains('is-hidden') && !startMenuPanel.contains(event.target)) {
+                startMenuPanel.classList.add('is-hidden');
+            }
+        });
+    }
+
+    if (settingsMenuLink) {
+        settingsMenuLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (typeof openSettings === 'function') {
+                openSettings();
+            }
+            startMenuPanel.classList.add('is-hidden');
+        });
+    }
+});
