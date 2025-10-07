@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title>morse_code_chatting</title>
+    <title>MorseType</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
     <script src="https://kit.fontawesome.com/ce7308f5de.js" crossorigin="anonymous"></script>
@@ -48,6 +48,7 @@
                     <button id="startPracticeButton" class="start-btn">タイピング練習</button>
                     <button id="startListeningButton" class="start-btn">リスニング練習</button>
                     <button id="startAiChatButton" class="start-btn">AIチャット</button>
+                    <button id="startChatButton" class="start-btn">だれかとチャット</button>
                 </div>
             </div>
         </div>
@@ -187,6 +188,78 @@
                 <button id="morseListButton">対応表</button>
             </div>
             <script src="scripts/aichat.js"></script>
+            <div class="conversion-wrapper slide-up-panel">
+                <div class="container">
+                    <span class="close-button">&times;</span>
+                    <ul class="list">
+                        <li>あ : ーー・ーー</li>
+                        <li>い : ・ー</li>
+                        <li>う : ・・ー</li>
+                        <li>え : ー・ーーー</li>
+                        <li>お : ・ー・・・</li>
+                        <li>か : ・ー・・</li>
+                        <li>き : ー・ー・・</li>
+                        <li>く : ・・・ー</li>
+                        <li>け : ー・ーー</li>
+                        <li>こ : ーーーー</li>
+                        <li>さ : ー・ー・ー</li>
+                        <li>し : ーー・ー・</li>
+                        <li>す : ーーー・ー</li>
+                        <li>せ : ・ーーー・</li>
+                        <li>そ : ーーー・</li>
+                        <li>た : ー・</li>
+                        <li>ち : ・・ー・</li>
+                        <li>つ : ・ーー・</li>
+                        <li>て : ・ー・ーー</li>
+                        <li>と : ・・ー・・</li>
+                        <li>な : ・ー・</li>
+                        <li>に : ー・ー・</li>
+                        <li>ぬ : ・・・・</li>
+                        <li>ね : ーー・ー</li>
+                        <li>の : ・・ーー</li>
+                        <li>は : ー・・・</li>
+                        <li>ひ : ーー・・ー</li>
+                        <li>ふ : ーー・・</li>
+                        <li>へ : ・</li>
+                        <li>ほ : ー・・</li>
+                        <li>ま : ー・・ー</li>
+                        <li>み : ・・ー・ー</li>
+                        <li>む : ー</li>
+                        <li>め : ー・・・ー</li>
+                        <li>も : ー・・ー・</li>
+                        <li>や : ・ーー</li>
+                        <li></li>
+                        <li>ゆ : ー・・ーー</li>
+                        <li></li>
+                        <li>よ : ーー</li>
+                        <li>ら : ・・・</li>
+                        <li>り : ーー・</li>
+                        <li>る : ー・ーー・</li>
+                        <li>れ : ーーー</li>
+                        <li>ろ : ・ー・ー</li>
+                        <li>わ : ー・ー</li>
+                        <li>ゐ : ・ー・・ー</li>
+                        <li>ゑ : ・ーー・・</li>
+                        <li>を : ・ーーー</li>
+                        <li>ん : ・ー・ー・</li>
+                        <li>゛ : ・・</li>
+                        <li>゜ : ・・ーー・</li>
+                        <li>ー : ・ーー・ー</li>
+                        <li>、 : ・ー・ー・ー</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div id="chatToggleElement" class="page-content is-hidden">
+            <div class="container">
+                <h2>だれかとチャット</h2>
+                <div id="chat-messages"></div>
+                <div id="chat-input-container">
+                    <p id="chat-text"></p>
+                    <button id="chat-send-btn" class="morse-button">クリック</button>
+                    <button id="backToStartScreenFromChat" class="back-button">スタートに戻る</button>
+                </div>
             </div>
         </div>
         <div id="listeningPracticeElement" class="page-content is-hidden">
@@ -264,13 +337,6 @@
                 </div>
             </div>
             <script src="scripts/practice-listen.js"></script>
-        </div>
-        <div id="morse-table-modal" class="modal is-hidden">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2>モールス信号対応表</h2>
-                <div id="morse-table-container"></div>
-            </div>
         </div>
         <div id="result-modal" class="modal is-hidden">
             <div class="modal-content result-modal-content">

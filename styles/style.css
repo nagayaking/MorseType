@@ -1012,3 +1012,27 @@ input:checked + .slider:before {
     background-color: #53aeff;
     color: white;
 }
+
+/* AI Chat Slide-up Panel */
+.slide-up-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40vh;
+    background-color: #333;
+    color: white;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 10;
+    /* Add visibility hidden to prevent interaction when off-screen */
+    visibility: hidden;
+}
+
+.slide-up-panel.is-visible {
+    transform: translateY(0);
+    visibility: visible;
+}

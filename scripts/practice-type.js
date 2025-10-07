@@ -555,6 +555,45 @@ function restartMorsePractice() {
 }
 window.restartMorsePractice = restartMorsePractice;
 
+window.resetPracticeGame = function() {
+    // Stop the score attack timer
+    if (timerInterval) { // Use timerInterval instead of scoreAttackTimer
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    // Stop the elapsed time timer as well
+    if (elapsedTimerInterval) {
+        clearInterval(elapsedTimerInterval);
+        elapsedTimerInterval = null;
+    }
+
+    isGameActive = false; // Stop game activity
+
+    // Reset score
+    score = 0;
+    if (scoreElement) {
+        scoreElement.textContent = score;
+    }
+
+    // Hide game stats
+    const gameStats = document.getElementById('game-stats');
+    if (gameStats) {
+        gameStats.classList.add('is-hidden');
+    }
+
+    // Reset other game state if necessary
+    // For example, clear the text
+    if (textJapaneseElement) {
+        textJapaneseElement.textContent = "";
+    }
+    if (textHuriganaElement) {
+        textHuriganaElement.textContent = "";
+    }
+    if (morseJapaneseElement) {
+        morseJapaneseElement.textContent = "";
+    }
+};
+
 
 document.addEventListener("DOMContentLoaded", () => {
     // --- DOM Element Initialization ---

@@ -200,7 +200,7 @@ function stopMorseSound() {
     isPlaying = false;
 }
 
-function playTone(duration, frequency = 600) {
+function playTone(duration, frequency = 880) {
   return new Promise(resolve => {
     if (audioContext.state === 'suspended') {
       audioContext.resume();
@@ -276,3 +276,5 @@ questionListenButton.addEventListener('click', () => {
   console.log(`Playing: ${questionAnswer[1]} -> ${morse}`);
   playMorse(morse);
 });
+
+window.stopMorseSound = stopMorseSound;

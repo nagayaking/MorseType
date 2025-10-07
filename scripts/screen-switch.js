@@ -7,17 +7,20 @@ const startScreen = document.getElementById('start-screen');
 const modeSelectionScreen = document.getElementById('mode-selection-screen');
 const practiceToggleElement = document.getElementById("practiceToggleElement");
 const aiChatToggleElement = document.getElementById("aiChatToggleElement");
+const chatToggleElement = document.getElementById("chatToggleElement");
 const listeningPracticeElement = document.getElementById("listeningPracticeElement");
 const settingsScreen = document.getElementById("settings-screen");
 
 const startPracticeButton = document.getElementById('startPracticeButton');
 const startListeningButton = document.getElementById('startListeningButton');
 const startAiChatButton = document.getElementById('startAiChatButton');
+const startChatButton = document.getElementById('startChatButton');
 const headerLeft = document.querySelector('.header-left');
 
 const timeAttackRadio = document.getElementById('timeAttackRadio');
 const startPracticeGameButton = document.getElementById('startPracticeGameButton');
 const backToStartScreenFromMode = document.getElementById('backToStartScreenFromMode');
+const backToStartScreenFromChat = document.getElementById('backToStartScreenFromChat');
 
 const closeBtn = document.querySelector('.close-btn');
 const overlay = document.getElementById('overlay');
@@ -28,6 +31,7 @@ function hideAllPages() {
     modeSelectionScreen.classList.add('is-hidden');
     practiceToggleElement.classList.add('is-hidden');
     aiChatToggleElement.classList.add('is-hidden');
+    chatToggleElement.classList.add('is-hidden');
     listeningPracticeElement.classList.add('is-hidden');
 }
 
@@ -36,6 +40,13 @@ function showStartScreen() {
     hideAllPages();
     startScreen.classList.remove('is-hidden');
     header.classList.add('header-hidden');
+
+    if (window.resetPracticeGame) {
+        window.resetPracticeGame();
+    }
+    if (window.stopMorseSound) {
+        window.stopMorseSound();
+    }
 }
 
 // モード選択画面を表示する関数
@@ -71,6 +82,9 @@ startPracticeGameButton.addEventListener('click', showTypingPracticeScreen);
 // モード選択画面 -> スタート画面へ戻る
 backToStartScreenFromMode.addEventListener('click', showStartScreen);
 
+// チャット画面 -> スタート画面へ戻る
+backToStartScreenFromChat.addEventListener('click', showStartScreen);
+
 // スタート画面の「リスニング練習」ボタン
 startListeningButton.addEventListener('click', () => {
     hideAllPages();
@@ -82,6 +96,13 @@ startListeningButton.addEventListener('click', () => {
 startAiChatButton.addEventListener('click', () => {
     hideAllPages();
     aiChatToggleElement.classList.remove('is-hidden');
+    header.classList.remove('header-hidden');
+});
+
+// スタート画面の「だれかとチャット」ボタン
+startChatButton.addEventListener('click', () => {
+    hideAllPages();
+    chatToggleElement.classList.remove('is-hidden');
     header.classList.remove('header-hidden');
 });
 
