@@ -230,7 +230,7 @@ main {
     margin-bottom: 20px;
 }
 
-#chat-container {
+.chat-container {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Space between messages */
@@ -240,7 +240,7 @@ main {
 }
 
 /* Common style for all message bubbles */
-#chat-container > div {
+.chat-container > div {
     max-width: 70%;
     padding: 10px 15px;
     border-radius: 15px;
@@ -273,23 +273,47 @@ main {
     border-radius: 5px;
 }
 
+.system-success {
+    background-color: #4CAF50; /* Green for success */
+    color: white;
+    align-self: center;
+    text-align: center;
+    border-radius: 5px;
+    max-width: 70%; /* Inherit from chat bubbles for consistency */
+    padding: 10px 15px;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.system-info {
+    background-color: #6c757d; /* Neutral gray for info */
+    color: white;
+    align-self: center;
+    text-align: center;
+    border-radius: 5px;
+    max-width: 70%;
+    padding: 10px 15px;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
 /* Webkit Scrollbar Styling */
-#chat-container::-webkit-scrollbar {
+.chat-container::-webkit-scrollbar {
     width: 8px;
 }
 
-#chat-container::-webkit-scrollbar-track {
+.chat-container::-webkit-scrollbar-track {
     background: #25272a;
     border-radius: 4px;
 }
 
-#chat-container::-webkit-scrollbar-thumb {
+.chat-container::-webkit-scrollbar-thumb {
     background-color: #555;
     border-radius: 4px;
     border: 2px solid #25272a;
 }
 
-#chat-container::-webkit-scrollbar-thumb:hover {
+.chat-container::-webkit-scrollbar-thumb:hover {
     background-color: #777;
 }
 
@@ -301,7 +325,7 @@ main {
     margin-bottom: 20px;
 }
 
-#userInput {
+.user-input-area {
     flex-grow: 1;
     display: flex;
     background-color: #25272a;
@@ -312,7 +336,7 @@ main {
     text-align: left;
 }
 
-#aitext {
+#aitext, #chat-text {
     margin: 0;
 }
 

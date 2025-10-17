@@ -171,17 +171,12 @@
             </div>
         </div>
         <div id="aiChatToggleElement" class="page-content is-hidden">
-            <div class="APIgetform">
-                <input type="password" id="APIkey" placeholder="APIキーを入力" class="getApi">
-                <button onclick="clickBtn()">取得</button>
-            </div>
             <div class="talk-wrapper">
-                <div id="chat-container">
+                <div id="ai-chat-container" class="chat-container">
                 </div>
             </div>
             <div id="input-container">
-                <div class="input"></div>
-                <div id="userInput">
+                <div class="user-input-area">
                     <p id="aitext"></p>
                 </div>
                 <button id="send-btn" class="morse-button" onmousedown="aiMouseDown()" onmouseup="aiMouseUp()" onmouseout="aiMouseLeave()" oncontextmenu="event.preventDefault()">クリック</button>
@@ -252,15 +247,18 @@
             </div>
         </div>
         <div id="chatToggleElement" class="page-content is-hidden">
-            <div class="container">
-                <h2>だれかとチャット</h2>
-                <div id="chat-messages"></div>
-                <div id="chat-input-container">
-                    <p id="chat-text"></p>
-                    <button id="chat-send-btn" class="morse-button">クリック</button>
-                    <button id="backToStartScreenFromChat" class="back-button">スタートに戻る</button>
+            <div class="talk-wrapper">
+                <div id="realtime-chat-container" class="chat-container">
                 </div>
             </div>
+            <div id="input-container">
+                <div class="user-input-area">
+                    <p id="chat-text"></p>
+                </div>
+                <button id="chat-morse-button" class="morse-button">モールス入力</button>
+                <button id="chat-submit-btn" class="start-btn">送信</button>
+            </div>
+            <button id="backToStartScreenFromChat" class="back-button">スタートに戻る</button>
         </div>
         <div id="listeningPracticeElement" class="page-content is-hidden">
             <div class="container listening-practice-container">
@@ -402,5 +400,6 @@
             <!-- 設定項目をここに追加 -->
         </div>
     </div>
+    <script src="scripts/chat-client.js" defer></script>
 </body>
 </html>

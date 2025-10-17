@@ -7,7 +7,7 @@ function clickBtn() {
     API_KEY = pass.value;
 }
 
-const chatContainer = document.getElementById('chat-container');
+const chatContainer = document.getElementById('ai-chat-container');
 const userInput = document.getElementById('user-input');
 const aiText = document.getElementById("aitext");
 
