@@ -781,7 +781,13 @@ input:checked + .slider:before {
 
 .start-buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
+}
+
+.start-button-group {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .start-btn {
